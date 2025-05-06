@@ -11,6 +11,13 @@
 1: A. Sommers, L Cummins, S. Mittal, S Rahimi, M Seale, J Jaboure, T Arnold, "A Survey of Transformer Enabled
 Time Series Synthesis" IEEE 10th International Conference on Collaboration and Internet Computing (CIC), 2024
 
+### Build and Run
+  1 
+  2 **build docker image "tsgbench"**
+  3 `docker build . -t tsgbench`
+  4 
+  5 **enter container**
+  6 `docker run -it tsgbench /bin/bash`
 
 ## Original TSGBench README
 
