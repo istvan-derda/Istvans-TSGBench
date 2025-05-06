@@ -2,7 +2,17 @@
   <h1> TSGBench: Time Series Generation Benchmark </h1>
 </div>
 
+## István's Spin
 
+### Goals:
+- [ ] dockerize
+- [ ] benchmark transformers mentioned in Sommers et al. 2025¹
+
+1: A. Sommers, L Cummins, S. Mittal, S Rahimi, M Seale, J Jaboure, T Arnold, "A Survey of Transformer Enabled
+Time Series Synthesis" IEEE 10th International Conference on Collaboration and Internet Computing (CIC), 2024
+
+
+## Original TSGBench README
 
 **[TSGBench](https://www.vldb.org/pvldb/vol17/p305-huang.pdf)** is the inaugural TSG benchmark designed for the Time Series Generation (TSG) task. We are excited to share that TSGBench has received the **Best Research Paper Award Nomination** at VLDB 2024 &#x1F3C6;
 
