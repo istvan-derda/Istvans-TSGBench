@@ -4,11 +4,9 @@ import os
 import sys
 
 from src.preprocess import preprocess_data, load_preprocessed_data
-from src.generation import generate_data, load_generated_data
 from src.evaluation import evaluate_data
 from src.utils import write_json_data
-
-project_root = os.path.dirname(os.path.realpath(__file__))
+from project_root import project_root
 
 def load_config_from_file(config_file):
     with open(config_file, 'r') as file:
@@ -20,6 +18,7 @@ def parse_command_line_arguments():
     parser.add_argument("-c","--config", default=f"{project_root}/config/config.yaml", help="Path to the configuration YAML file")
     parser.add_argument("-nlc","--no_load_config", action="store_true", default=False, help="Do not load config from configuration YAML file so you need to specify the config by terminal commands")
 
+    # preprocessing config
     parser.add_argument("-p","--do_preprocessing", action="store_false", default=True, help="Whether to do data preprocessing")
     parser.add_argument("-odp","--original_data_path", default="YOUR_DATA_PATH_HERE", help="Original data path")
     parser.add_argument("-oop","--output_ori_path", default="./data/ori/", help="Path to the output directory")
@@ -30,6 +29,7 @@ def parse_command_line_arguments():
     parser.add_argument("-vr","--valid_ratio", default=0.1, type=float, help="The ratio of validation set")
     parser.add_argument("-dm","--do_normalization", action="store_false", default=True, help="The window length of time series")
     
+    # generation config
     parser.add_argument("-g","--do_generation", action="store_false", default=True, help="Whether to do data generation")
     parser.add_argument("-m","--model", default="TimeVAE", help="Model name to do generation")
     parser.add_argument("-dng","--dataset_name_gen", default="stock", help="Dataset name")
@@ -40,6 +40,7 @@ def parse_command_line_arguments():
     parser.add_argument("-ld","--latent_dim", default=64, type=int, help="Latent dimension in TimeVAE model")
     parser.add_argument("-hl","--hidden_layer", default=[32, 64, 128], help="Hidden layer list TimeVAE model")
     
+    # evaluation config
     parser.add_argument("-e","--do_evaluation", action="store_false", default=True, help="Whether to do data evaluation")
     parser.add_argument("-rp","--result_path", default="./result/", help="Path to the result directory")
     parser.add_argument("-nce","--no_cuda_eval", action="store_false", default=True, help="Disable cuda in evaluation stage")
@@ -54,57 +55,49 @@ def parse_command_line_arguments():
 def main():
     args = parse_command_line_arguments()
 
-    if args.config and not args.no_load_config:
-        # Load configuration from YAML file
+    # By default, load configuration from YAML file
+    if not args.no_load_config:
         config = load_config_from_file(args.config)
-    else:
-        # Build configuration from command-line arguments
-        args_dict = vars(args)
-        config = {'preprocessing':{},'generation':{},'evaluation':{}}
-        for key, value in args_dict.items():
-            if key in ['do_preprocessing','original_data_path','output_ori_path','use_ucr_uea_dataset','ucr_uea_dataset_name','seq_length','valid_ratio','do_normalization']:
-                config['preprocessing'][key]=value
-            if key == 'dataset_name_pre':
-                config['preprocessing']['dataset_name']=value
+    
+    # Command line args overwrite configuration file
+    args_dict = vars(args)
+    config = {'preprocessing':{},'generation':{},'evaluation':{}}
+    for key, value in args_dict.items():
+        if key in ['do_preprocessing','original_data_path','output_ori_path','use_ucr_uea_dataset','ucr_uea_dataset_name','seq_length','valid_ratio','do_normalization']:
+            config['preprocessing'][key]=value
+        if key == 'dataset_name_pre':
+            config['preprocessing']['dataset_name']=value
 
-            if key in ['do_generation','model','output_gen_path','pretrain_path','latent_dim','hidden_layer']:
-                config['generation'][key]=value
-            if key == 'no_cuda_gen':
-                config['generation']['no_cuda']=value
-            if key == 'cuda_device_gen':
-                config['generation']['cuda_device']=value
-            
-            if key in ['do_evaluation','result_path','method_list','iter_disc','iter_pred','rnn_name']:
-                config['evaluation'][key]=value
-            if key == 'no_cuda_eval':
-                config['generation']['no_cuda']=value
-            if key == 'cuda_device_eval':
-                config['generation']['cuda_device']=value
+        if key in ['do_generation','model','output_gen_path','pretrain_path','latent_dim','hidden_layer']:
+            config['generation'][key]=value
+        if key == 'no_cuda_gen':
+            config['generation']['no_cuda']=value
+        if key == 'cuda_device_gen':
+            config['generation']['cuda_device']=value
+        
+        if key in ['do_evaluation','result_path','method_list','iter_disc','iter_pred','rnn_name']:
+            config['evaluation'][key]=value
+        if key == 'no_cuda_eval':
+            config['generation']['no_cuda']=value
+        if key == 'cuda_device_eval':
+            config['generation']['cuda_device']=value
     
     print(config)
 
     # Execute pipeline steps
     if config['preprocessing'].get('do_preprocessing',True):
-        data = preprocess_data(config['preprocessing'])
+        preprocessing_config = config['preprocessing']
+        # Parse configs
+        ori_data_path = preprocessing_config.get('original_data_path','data')
+        output_ori_path = preprocessing_config.get('output_ori_path',r'./data/ori/')
+        dataset_name = preprocessing_config.get('dataset_name','dataset')
+        seq_length = preprocessing_config.get('seq_length',None)
+        valid_ratio = preprocessing_config.get('valid_ratio',0.1)
+        do_normalization = preprocessing_config.get('do_normalization',True)
+        data = preprocess_data(ori_data_path, output_ori_path, dataset_name, seq_length, valid_ratio, do_normalization)
     else:
         data = load_preprocessed_data(config['preprocessing'])
 
-    # Data preprocessed can be used to train your generation model, assume training process already done
-
-    if config['generation'].get('do_generation',True):
-        generated_data = generate_data(config['generation'], data)
-    else:
-        generated_data = load_generated_data(config['generation'])
-
-    if config['evaluation'].get('do_evaluation',True):
-        dataset_name = config['preprocessing'].get('dataset_name','dataset')
-        model_name = config['generation'].get('model','TimeVAE')
-        if 'dataset_name' not in config['evaluation']:
-            config['evaluation']['evaluation'] = dataset_name
-        if 'model' not in config['evaluation']:
-            config['evaluation']['model'] = model_name
-        results = evaluate_data(config['evaluation'],data,generated_data)
-        
     print('Program normal end.')
 
 if __name__ == "__main__":

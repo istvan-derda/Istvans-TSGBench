@@ -1,0 +1,11 @@
+{
+    "name": "TSGBench",
+    "build": { "dockerfile": "Dockerfile" },
+
+    "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": ["mechatroner.rainbow-csv", "ms-python.python", "ms-toolsai.jupyter"]
+    }
+  },
+}

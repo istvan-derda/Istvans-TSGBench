@@ -1,7 +1,6 @@
 import mgzip
 import pickle
 import os
-from model.timevae_model import initialize_timevae_model
 from .utils import show_with_start_divider,show_with_end_divider, make_sure_path_exist
 
 def generate_data(cfg,data):
@@ -23,7 +22,8 @@ def generate_data(cfg,data):
         return None
 
     if model_name == 'TimeVAE':
-        model = initialize_timevae_model(cfg,train_data[0].shape)
+        show_with_end_divider('Error: Model not implemented.')
+        return None
     else:
         show_with_end_divider('Error: Model not implemented.')
         return None

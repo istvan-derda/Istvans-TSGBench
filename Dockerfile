@@ -1,5 +1,6 @@
 from docker.io/python:3.7
 
+# TSGBench dependencies
 run pip install numpy
 run pip install matplotlib
 run pip install scipy
@@ -12,8 +13,7 @@ run pip install tslearn
 run pip install seaborn
 run pip install mgzip
 run pip install pyyaml
+run pip install pandas
 
-copy . /tsgbench
-workdir /tsgbench
-
-cmd /bin/sh
+# Development utilities
+run pip install jupyterlab

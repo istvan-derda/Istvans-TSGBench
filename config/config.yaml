@@ -1,6 +1,6 @@
 preprocessing:
   do_preprocessing: True
-  original_data_path: YOUR_DATA_PATH_HERE
+  original_data_path: None
   output_ori_path: ./data/ori/
   dataset_name: stock
   use_ucr_uea_dataset: False # Set it True if you need ucr/uea dataset
@@ -21,7 +21,7 @@ generation:
   hidden_layer: [32, 64, 128]
   
 evaluation:
-  do_evaluation: True
+  do_evaluation: False
   result_path: ./result/
   no_cuda: True # Set it True if you don't need cuda in eval stage
   cuda_device: 0 # Specify the index if you use cuda and have multiple cuda devices

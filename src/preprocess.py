@@ -50,49 +50,11 @@ def sliding_window_view(data, window_size, step=1):
     strided_array = np.lib.stride_tricks.as_strided(data, shape=new_shape, strides=new_strides)
     return strided_array
 
-def preprocess_data(cfg):
-    show_with_start_divider(f"Data preprocessing with settings:{cfg}")
-
-    # Parse configs
-    ori_data_path = cfg.get('original_data_path',None)
-    output_ori_path = cfg.get('output_ori_path',r'./data/ori/')
-    dataset_name = cfg.get('dataset_name','dataset')
-    use_ucr_uea_dataset = cfg.get('use_ucr_uea_dataset',None)
-    ucr_uea_dataset_name = cfg.get('ucr_uea_dataset_name',None)
-    seq_length = cfg.get('seq_length',None)
-    valid_ratio = cfg.get('valid_ratio',0.1)
-    do_normalization = cfg.get('do_normalization',True)
+def preprocess_data(ori_data_path, dataset_name, seq_length=None, valid_ratio=0.1, do_normalization=True, output_ori_path='data/ori_preprocessed'):
+    show_with_start_divider(f"Data preprocessing of {dataset_name}")
 
     # Read original data
-    if not os.path.exists(ori_data_path):
-        show_with_end_divider(f'Original file path {ori_data_path} does not exist.')
-        return None
-    _, ext = os.path.splitext(ori_data_path)
-    try:
-        if use_ucr_uea_dataset:
-            X_train, y_train, X_test, y_test = UCR_UEA_datasets().load_dataset(ucr_uea_dataset_name)
-            X_train = X_train.reshape(X_train.shape[1], X_train.shape[0])
-            ori_data = X_train.copy()
-            
-            for i in range(ori_data.shape[1]):
-                ori_data[:,i] = pd.Series(ori_data[:,i]).interpolate().values
-
-        if ext in ['.csv']:
-            ori_data = np.loadtxt(ori_data_path, delimiter = ",", skiprows = 1)
-        elif ext in ['.pkl']:
-            try:
-                with mgzip.open(ori_data_path, 'rb') as f:
-                    ori_data = pickle.load(f)
-            except (OSError, IOError):
-                # If mgzip fails, try reading it as a regular pickle file
-                with open(ori_data_path, 'rb') as f:
-                    ori_data = pickle.load(f)
-        else:
-            show_with_end_divider(f"Error: Unsupported file extension: {ext}")
-            return None
-    except Exception as e:
-        show_with_end_divider(f"Error: An error occurred during reading data: {e}.")
-        return None
+    ori_data = np.loadtxt(ori_data_path, delimiter = ",", skiprows = 1)
     
     # Check and interpolate missing values
     if np.isnan(ori_data).any():
@@ -102,15 +64,14 @@ def preprocess_data(cfg):
         ori_data = df.to_numpy()
 
     # Determine the data length
-    if seq_length:
-        if seq_length>0 and seq_length<=ori_data.shape[0]:
+    if seq_length and int(seq_length)>0 and int(seq_length)<=ori_data.shape[0]:
             seq_length = int(seq_length)
-        else:
-            window_all = []
-            for i in range(ori_data.shape[1]):
-                window_all.append(find_length(ori_data[:,i]))
+    else:
+        window_all = []
+        for i in range(ori_data.shape[1]):
+            window_all.append(find_length(ori_data[:,i]))
 
-            seq_length = int(np.mean(np.array(window_all)))
+        seq_length = int(np.mean(np.array(window_all)))
     
     # Slice the data by sliding window
     # windowed_data = np.lib.stride_tricks.sliding_window_view(ori_data, window_shape=(seq_length, ori_data.shape[1]))
