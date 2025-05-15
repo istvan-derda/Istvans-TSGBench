@@ -7,12 +7,11 @@ import time
 import sys
 import pandas as pd
 from scipy.io import arff
-import pathlib
 import re
-
 
 from project_root import project_root
 from src.preprocess import preprocess_data
+
 
 raw_data_dir = os.path.join(project_root, 'data/ori_raw')
 
@@ -32,11 +31,9 @@ def main():
 
 
 def populate_D2_D3_stock():
-    raw_data_path = download_dataset(
-        url=urls['D2_D3'],
-        data_path_in_zip=None,
-        dataset_name='D2_D3_stock'
-    )
+    print_populate_start('D2_D3_stock')
+    temp_path = download_dataset(url=urls['D2_D3'])
+    raw_data_path = persist(temp_path, 'D2_D3_stock.csv')
 
     preprocess_data(
         ori_data_path=raw_data_path,
@@ -52,11 +49,10 @@ def populate_D2_D3_stock():
 
 
 def populate_D4_exchange():
-    raw_data_path = download_dataset(
-        url=urls['D4'],
-        data_path_in_zip=None,
-        dataset_name='D4_exchange'
-    )
+    print_populate_start('D4_exchange')
+    temp_path = download_dataset(url=urls['D4'])
+    temp_path = ungzip(temp_path)
+    raw_data_path = persist(temp_path, 'D4_exchange.csv')
 
     preprocess_data(
         ori_data_path=raw_data_path,
@@ -66,13 +62,11 @@ def populate_D4_exchange():
 
 
 def populate_D5_D6_energy():
-    raw_data_path = download_dataset(
-        url=urls['D5_D6'],
-        data_path_in_zip='energydata_complete.csv', 
-        dataset_name='D5_D6_energy'
-    )
-
-    remove_csv_column(raw_data_path, 'date')
+    print_populate_start('D5_D6_energy')
+    temp_path = download_dataset(url=urls['D5_D6'])
+    temp_path = unzip(temp_path, data_path_in_zip='energydata_complete.csv')
+    temp_path = remove_csv_column(temp_path, 'date')
+    raw_data_path = persist(temp_path, 'D5_D6_energy.csv')
 
     preprocess_data(
         ori_data_path=raw_data_path,
@@ -80,7 +74,6 @@ def populate_D5_D6_energy():
         seq_length=24
     )
     
-
     preprocess_data(
         ori_data_path=raw_data_path,
         dataset_name='D6_energy_long', 
@@ -89,58 +82,69 @@ def populate_D5_D6_energy():
 
 
 def populate_D7_eeg():
-    arff_path = download_dataset(
-        url=urls['D7'],
-        data_path_in_zip='EEG Eye State.arff',
-        dataset_name='D7_eeg'
-    )
-
-    csv_path = arff2csv(arff_path)
-
-    remove_csv_column(csv_path, 'eyeDetection')
+    print_populate_start('D7_eeg')
+    temp_path = download_dataset(url=urls['D7'])
+    temp_path = unzip(temp_path, data_path_in_zip='EEG Eye State.arff')
+    temp_path = arff2csv(temp_path)
+    temp_path = remove_csv_column(temp_path, 'eyeDetection')
+    raw_data_path = persist(temp_path, 'D7_eeg.csv')
 
     preprocess_data(
-        ori_data_path=csv_path,
+        ori_data_path=raw_data_path,
         dataset_name='D7_eeg',
         seq_length=128
     )
    
 
-def download_dataset(url, data_path_in_zip, dataset_name):
-    dest_path = os.path.join(raw_data_dir, dataset_name)
-    if os.path.isfile(dest_path):
-        return dest_path
-    
-    print(f"Downloading {dataset_name} dataset")
+def print_populate_start(dataset_name):
+    print(f"Retrieving {dataset_name} dataset")
+
+
+def download_dataset(url):
     file_path, _ = request.urlretrieve(url, reporthook=urlretrieve_reporthook)
     print("\n")
+    return file_path
 
-    download_suffix = pathlib.Path(url).suffix
-    if download_suffix != '.csv':
-        print(f"Unzipping {dataset_name} dataset")
-        file_path = unzip_file(file_path, download_suffix)
 
-    print(f"Moving {dataset_name} dataset to {dest_path}")
-    if data_path_in_zip != None:
-        file_path = os.path.join(file_path, data_path_in_zip)
-    shutil.move(file_path, dest_path)
+def persist(temp_path, filename):
+    dest_path = os.path.join(raw_data_dir, filename)
+    print(f"Persisting {filename} at {dest_path}")
+    shutil.move(temp_path, dest_path)
     return dest_path
 
 
-def unzip_file(path, suffix):
-    out_path = path + '.unzip'
-    if suffix == '.zip':
-        with zipfile.ZipFile(path,"r") as zip_ref:
-            zip_ref.extractall(out_path)
-            return out_path
-    elif suffix == '.gz':
-        with gzip.open(path, 'rb') as f_in:
-            with open(out_path, 'wb') as f_out:
+def ungzip(path):
+    uncompressed_path = path + '.unzip'
+    with gzip.open(path, 'rb') as f_in:
+            with open(uncompressed_path, 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
-                return out_path
-    else:
-        raise NotImplemented(f"Decompression for {suffix} not implemented")
+                return uncompressed_path
+            
 
+def unzip(path, data_path_in_zip):
+    uncompressed_path = path + '.unzip'
+    data_path = os.path.join(uncompressed_path, data_path_in_zip)
+    with zipfile.ZipFile(path,"r") as zip_ref:
+            zip_ref.extractall(uncompressed_path)
+            return data_path
+
+
+def remove_csv_column(file_path, col_name):
+    data = pd.read_csv(file_path)
+    if not col_name in data.columns:
+        return
+    print(f'Removing column {col_name}')
+    data = data.drop([col_name], axis='columns')
+    data.to_csv(file_path, index=False)
+    return file_path
+
+
+def arff2csv(file_path):
+    out_path = re.sub('.arff', '', file_path) + '.csv'
+    data = arff.loadarff(file_path)
+    data = pd.DataFrame(data[0])
+    data.to_csv(out_path, index=False)
+    return out_path
 
 
 def urlretrieve_reporthook(count, block_size, _):
@@ -153,23 +157,6 @@ def urlretrieve_reporthook(count, block_size, _):
     kb_s = int(progress_bytes / (1024 * duration))
     sys.stdout.write(f"\r... {round(progress_bytes / (1024 * 1024), 1)} MB, {kb_s} KB/s, {round(duration)} seconds passed")
     sys.stdout.flush()
-
-
-def remove_csv_column(file_path, col_name):
-    data = pd.read_csv(file_path)
-    if not col_name in data.columns:
-        return
-    print(f'Removing column {col_name}')
-    data = data.drop([col_name], axis='columns')
-    data.to_csv(file_path, index=False)
-
-
-def arff2csv(file_path):
-    out_path = re.sub('.arff', '', file_path) + '.csv'
-    data = arff.loadarff(file_path)
-    data = pd.DataFrame(data[0])
-    data.to_csv(out_path, index=False)
-    return out_path
 
 
 if __name__ == "__main__":

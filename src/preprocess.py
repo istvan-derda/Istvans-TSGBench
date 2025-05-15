@@ -50,7 +50,7 @@ def sliding_window_view(data, window_size, step=1):
     strided_array = np.lib.stride_tricks.as_strided(data, shape=new_shape, strides=new_strides)
     return strided_array
 
-def preprocess_data(ori_data_path, dataset_name, seq_length=None, valid_ratio=0.1, do_normalization=True, output_ori_path='data/ori_preprocessed'):
+def preprocess_data(ori_data_path, dataset_name, seq_length=None, valid_ratio=0.1, do_normalization=True, output_ori_path='data/ori'):
     show_with_start_divider(f"Data preprocessing of {dataset_name}")
 
     # Read original data
