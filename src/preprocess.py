@@ -1,10 +1,8 @@
 import numpy as np
 import pandas as pd
 import os
-import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import acf
 from scipy.signal import argrelextrema
-from tslearn.datasets import UCR_UEA_datasets
 import pickle
 import mgzip
 from .utils import show_with_start_divider, show_with_end_divider, make_sure_path_exist, MinMaxScaler
