@@ -3,7 +3,7 @@ import seaborn as sns
 import os
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
-from .utils import MinMaxScaler, make_sure_path_exist
+from .utils import make_sure_path_exist
 
 # adapt from https://github.com/jsyoon0823/TimeGAN, https://openreview.net/forum?id=ez6VHWvuXEx
 
