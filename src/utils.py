@@ -40,12 +40,12 @@ def write_mgzip_data(content, path):
 
 def write_json_data(content, path):
     make_sure_path_exist(path)
-    with open('data.json', 'w') as json_file:
+    with open(path, 'w') as json_file:
         json.dump(content, json_file, indent=4)
 
-def determine_device(no_cuda,cuda_device):
+def determine_device(cuda_device):
     # Determine device (cpu/gpu)
-    if no_cuda or not torch.cuda.is_available():
+    if cuda_device == None or not torch.cuda.is_available():
         device = torch.device('cpu')
     else:
         if torch.cuda.device_count()>1:

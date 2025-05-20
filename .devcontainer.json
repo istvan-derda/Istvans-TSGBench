@@ -4,8 +4,10 @@
 
     "customizations": {
     "vscode": {
-      "settings": {},
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python"
+      },
       "extensions": ["mechatroner.rainbow-csv", "ms-python.python", "ms-toolsai.jupyter"]
     }
-  },
+  }
 }

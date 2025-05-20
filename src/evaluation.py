@@ -53,22 +53,15 @@ def calculate_dtw(ori_data,comp_data):
     return average_distance_dtw
 
 
-def evaluate_data(cfg, ori_data, gen_data):
-    show_with_start_divider(f"Evalution with settings:{cfg}")
+def evaluate_data(ori_data, gen_data, model_name, dataset_name, method_list='[C-FID,MDD,ACD,SD,KD,ED,DTW,t-SNE,Distribution]', cuda_device=None):
+    show_with_start_divider(f"Starting Evalution")
 
-    # Parse configs
-    method_list = cfg.get('method_list','[C-FID,MDD,ACD,SD,KD,ED,DTW,t-SNE,Distribution]')
-    #result_path = cfg.get('result_path',r'./result/')
-    dataset_name = cfg.get('dataset_name','dataset')
-    model_name = cfg.get('model','TimeVAE')
-    no_cuda = cfg.get('no_cuda',False)
-    cuda_device = cfg.get('cuda_device',0)
-    device = determine_device(no_cuda,cuda_device)
-    result_path = cfg.get('result_path','./result/')
+    device = determine_device(cuda_device)
+    result_path = './result/'
 
     now = datetime.datetime.now()
     formatted_time = now.strftime("%Y%m%d-%H%M%S")
-    combined_name = f'{model_name}_{dataset_name}_{formatted_time}'
+    combined_name = f'{formatted_time}_{model_name}_{dataset_name}'
 
     if not isinstance(method_list,list):
         method_list = method_list.strip('[]')
