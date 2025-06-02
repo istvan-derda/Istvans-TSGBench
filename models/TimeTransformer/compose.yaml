@@ -1,8 +1,0 @@
-services:
-  time_transformer:
-    build: .
-    volumes:
-      - type: bind
-        source: ../../data
-        target: /workspace/data
-        

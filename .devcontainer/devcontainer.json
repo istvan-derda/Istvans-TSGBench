@@ -1,0 +1,15 @@
+{
+  "name": "TSGBench",
+  "image": "docker.io/python:3.7",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python"
+      }
+    }
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/conda:1": {}
+  }
+}

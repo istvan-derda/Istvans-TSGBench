@@ -8,6 +8,7 @@ import os
 from Time_Transformer.aae import aae_model
 from Time_Transformer.networks import timesformer_dec, cnn_enc, discriminator
 
+data_root = '../../data/'
 
 def main():
     train_data = load_train_data()
@@ -18,17 +19,23 @@ def main():
 
 
 def load_train_data():
-    with mgzip.open('data/ori/D2_stock/D2_stock_train.pkl') as f:
+    dataset_name = get_dataset_name()
+    with mgzip.open(f'{data_root}ori/{dataset_name}/{dataset_name}_train.pkl') as f:
         train_data = pickle.load(f)
     return train_data
 
 
 def persist_gen_data(data):
-    dir_path = 'data/gen/D2_stock/'
-    file_path = dir_path+'D2_stock_gen.pkl'
+    dataset_name = get_dataset_name()
+    dir_path = f'{data_root}gen/{dataset_name}/'
+    file_path = dir_path+f'{dataset_name}_gen.pkl'
     os.makedirs(dir_path, exist_ok=True)
     with mgzip.open(file_path, 'wb') as f:
         pickle.dump(data, f)
+
+
+def get_dataset_name():
+    return os.environ['TSGB_USE_DATASET']
 
 
 def generate_from(train_data):
@@ -41,7 +48,7 @@ def generate_from(train_data):
     )
     
     # from Time-Transformer/tutorial.ipynb #Train model
-    model.fit(train_data, epochs=20, batch_size=128) # epochs schould be 800
+    model.fit(train_data, epochs=20, batch_size=128)
 
     z = tf.random.normal([train_data.shape[0], latent_dim], 0.0, 1.0)
     gen_data = model.dec.predict(z)

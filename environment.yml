@@ -1,0 +1,16 @@
+name: tsgbench
+dependencies:
+- python=3.7
+- pip
+- pip:
+  - numpy
+  - matplotlib
+  - scipy
+  - dtaidistance
+  - tensorflow
+  - scikit-learn
+  - torch
+  - statsmodels
+  - seaborn
+  - mgzip
+  - pandas
