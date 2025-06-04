@@ -1,5 +1,3 @@
-(return 0 2>/dev/null) || echo 'hi' # echo "Error: Please use 'source env/sc_uni_leipzig/init'" && exit
-
 [[ ! $PWD == */models/TimeTransformer ]] && echo "Error: Please source this from models/TimeTransformer with the command 'source env/sc_uni_leipzig/init" && return
 
 git clone https://github.com/Lysarthas/Time-Transformer.git Time_Transformer
