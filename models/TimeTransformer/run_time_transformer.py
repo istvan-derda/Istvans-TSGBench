@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.keras.optimizers.schedules import PolynomialDecay
 import sys
 sys.path.append('../')
-from utils import load_train_data, persist_gen_data
+from tsgb_utils import load_train_data, persist_gen_data
 
 
 from Time_Transformer.aae import aae_model
