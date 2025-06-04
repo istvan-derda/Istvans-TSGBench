@@ -3,9 +3,9 @@ dependencies:
 - python=3.7.16
 - pip
 - pip:
-  - numpy==1.21.5
-  - tensorflow==2.6.0
-  - keras==2.6.0
-  - scikit-learn==0.24.2
-  - scipy==1.6.2
-  - mgzip
+  - numpy==1.21.6
+  - tensorflow==2.11.0
+  - keras==2.11.0
+  - scikit-learn==1.0.2
+  - scipy==1.7.3
+  - mgzip==0.2.1
