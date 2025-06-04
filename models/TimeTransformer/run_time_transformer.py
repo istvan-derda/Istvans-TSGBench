@@ -48,7 +48,7 @@ def generate_from(train_data):
     )
     
     # from Time-Transformer/tutorial.ipynb #Train model
-    model.fit(train_data, epochs=20, batch_size=128)
+    model.fit(train_data, epochs=800, batch_size=128)
 
     z = tf.random.normal([train_data.shape[0], latent_dim], 0.0, 1.0)
     gen_data = model.dec.predict(z)
