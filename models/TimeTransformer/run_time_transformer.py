@@ -1,14 +1,13 @@
-import pickle
-import mgzip
 import tensorflow as tf
 from tensorflow.keras.optimizers.schedules import PolynomialDecay
-import os
+import sys
+sys.path.append('../')
+from utils import load_train_data, persist_gen_data
 
 
 from Time_Transformer.aae import aae_model
 from Time_Transformer.networks import timesformer_dec, cnn_enc, discriminator
 
-data_root = '../../data/'
 
 def main():
     train_data = load_train_data()
@@ -16,26 +15,6 @@ def main():
     gen_data = generate_from(train_data)
 
     persist_gen_data(gen_data)
-
-
-def load_train_data():
-    dataset_name = get_dataset_name()
-    with mgzip.open(f'{data_root}ori/{dataset_name}/{dataset_name}_train.pkl') as f:
-        train_data = pickle.load(f)
-    return train_data
-
-
-def persist_gen_data(data):
-    dataset_name = get_dataset_name()
-    dir_path = f'{data_root}gen/{dataset_name}/'
-    file_path = dir_path+f'{dataset_name}_gen.pkl'
-    os.makedirs(dir_path, exist_ok=True)
-    with mgzip.open(file_path, 'wb') as f:
-        pickle.dump(data, f)
-
-
-def get_dataset_name():
-    return os.environ['TSGB_USE_DATASET']
 
 
 def generate_from(train_data):
