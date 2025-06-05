@@ -17,7 +17,7 @@ This is the most reproducible option. The repository contains a .devcontainer/de
 - Open the repository in VS Code. It should prompt you if you want to open the project in a devcontainer. 
 - After confirming you should get a new VS Code window. This might take a moment to build the container.
 - In the bottom right corner it should say "Dev Container: TSG Bench".
-- Open the integrated terminal and try if you have conda by running `conda`
+- In the integrated terminal create the conda environment with `conda env create` and activate it with `conda activate tsg-bench`
 
 **Setup on Linux with conda**
 
@@ -26,6 +26,8 @@ This approach is recommended on systems where you cannot install Docker or don't
 - Use any IDE you are comfortable with or just the terminal
 - Check if you have conda installed by running `conda` in the terminal.
   - If not: Follow the installation instructions for [miniconda]() or check the documentation of your high performance computing cluster on how to enable conda.
+- Create the conda environment with `conda env create` and activate it with `conda activate tsg-bench`
+
 
 ### Use TSGBench
 
