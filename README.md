@@ -4,15 +4,48 @@
 
 ## István's Spin
 
+This repository assumes a linux system or container with conda or mamba installed.
+
+### Setup Development Environment
+
+**Setup on MacOS, Windows or Linux with Dev Containers**
+
+This is the most reproducible option. The repository contains a .devcontainer/devcontainer.json definition. This allows you to open the project with any IDE supporting Dev Containers, and have the same Linux environment as I had when writing the code - on any OS. The instructions below are for a setup with Docker, VS Code and the VS Code Dev Containers extension.
+
+- Install Visual Studio Code
+- Follow the installation instructions for the [VS Code Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+- Open the repository in VS Code. It should prompt you if you want to open the project in a devcontainer. 
+- After confirming you should get a new VS Code window. This might take a moment to build the container.
+- In the bottom right corner it should say "Dev Container: TSG Bench".
+- Open the integrated terminal and try if you have conda by running `conda`
+
+**Setup on Linux with conda**
+
+This approach is recommended on systems where you cannot install Docker or don't want to run everything in a container, e.g. on a high performance computing cluster.
+
+- Use any IDE you are comfortable with or just the terminal
+- Check if you have conda installed by running `conda` in the terminal.
+  - If not: Follow the installation instructions for [miniconda]() or check the documentation of your high performance computing cluster on how to enable conda.
+
+### Use TSGBench
+
+**Get the Benchmark Datasets**
+
+`python populate_data.py`
+
+**Run a Benchmark**
+
+Follow the instructions in the subdirectory models/[model you want to benchmark]
+
+**Evaluate a Generated Time Series**
+
+TODO: Not yet fully implemented
+
 ### Goals:
 [ ] benchmark transformers mentioned in Sommers et al. 2025¹
 
 1: A. Sommers, L Cummins, S. Mittal, S Rahimi, M Seale, J Jaboure, T Arnold, "A Survey of Transformer Enabled
 Time Series Synthesis" IEEE 10th International Conference on Collaboration and Internet Computing (CIC), 2024
-
-### Get Datasets
-
-`python populate_data.py`
 
 ## Original TSGBench README
 

@@ -22,3 +22,7 @@ Choose which dataset to use e.g.:
 Then run the TimeTransformer
 
 `python run_time_transformer.py`
+
+or in onen command:
+
+`TSGB_USE_DATASET=D5_energy python run_time_transformer.py`
