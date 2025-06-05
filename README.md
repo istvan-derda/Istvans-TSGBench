@@ -41,8 +41,12 @@ Follow the instructions in the subdirectory models/[model you want to benchmark]
 
 TODO: Not yet fully implemented
 
-### Goals:
-[ ] benchmark transformers mentioned in Sommers et al. 2025¹
+### Todo:
+- [ ] Clean up src/
+- [ ] Find out why Time-Transformer AAE does not accept some datasets, but others
+- [ ] Benchmark transformers mentioned in Sommers et al. 2025¹
+  - [ ] Set up TTS-GAN
+
 
 1: A. Sommers, L Cummins, S. Mittal, S Rahimi, M Seale, J Jaboure, T Arnold, "A Survey of Transformer Enabled
 Time Series Synthesis" IEEE 10th International Conference on Collaboration and Internet Computing (CIC), 2024
