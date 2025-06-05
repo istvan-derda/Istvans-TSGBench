@@ -7,13 +7,14 @@ import time
 import sys
 import pandas as pd
 from scipy.io import arff
+from pyprojroot import here
 import re
 
-from project_root import project_root
 from src.preprocess import preprocess_data
+from src.utils import make_sure_path_exist
 
 
-raw_data_dir = os.path.join(project_root, 'data/ori_raw')
+raw_data_dir = here('data/ori_raw')
 
 urls = {
     'D2_D3': 'https://github.com/jsyoon0823/TimeGAN/raw/refs/heads/master/data/stock_data.csv',
@@ -109,6 +110,7 @@ def download_dataset(url):
 def persist(temp_path, filename):
     dest_path = os.path.join(raw_data_dir, filename)
     print(f"Persisting {filename} at {dest_path}")
+    make_sure_path_exist(dest_path)
     shutil.move(temp_path, dest_path)
     return dest_path
 
