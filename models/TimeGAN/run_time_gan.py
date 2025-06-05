@@ -1,7 +1,10 @@
 import sys
-sys.path.append('../')
-from tsgb_utils import load_train_data, persist_gen_data
+import os
 
+sys.path.append('../') # make tsgb_utils import work
+sys.path.append(os.path.join(os.path.dirname(__file__), 'Time_GAN')) # make importing utils in timegan.py work
+
+from tsgb_utils import load_train_data, persist_gen_data
 from Time_GAN.timegan import timegan
 
 def main():
