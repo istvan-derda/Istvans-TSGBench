@@ -1,5 +1,6 @@
 .ipynb_checkpoints
 .jupyter
 .vscode
-**/__pycache__
+__pycache__
 data/
+gen
