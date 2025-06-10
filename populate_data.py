@@ -45,7 +45,7 @@ def populate_D2_D3_stock():
     preprocess_data(
         ori_data_path=raw_data_path,
         dataset_name='D3_stock_long',
-        seq_length=125
+        seq_length=128 # TSGBench ori 125
     )
 
 
@@ -58,7 +58,7 @@ def populate_D4_exchange():
     preprocess_data(
         ori_data_path=raw_data_path,
         dataset_name='D4_exchange',
-        seq_length=125
+        seq_length=128 # TSGBench ori 125
     )
 
 
@@ -78,7 +78,7 @@ def populate_D5_D6_energy():
     preprocess_data(
         ori_data_path=raw_data_path,
         dataset_name='D6_energy_long', 
-        seq_length=125
+        seq_length=128 # TSGBench ori 125
     )
 
 
