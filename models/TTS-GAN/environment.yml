@@ -1,0 +1,26 @@
+name: tts-gan
+dependencies:
+- python=3.12
+- numpy
+- imageio
+- scipy
+- tqdm
+- six
+# - dateutil
+# - PIL
+- pandas
+- tabulate
+# - tsaug
+# - cv2
+# - einops
+# - adamw
+- matplotlib
+- scikit-learn
+- pip
+- pip:
+  - torch
+  - torchvision
+  - torchsummary
+  - opencv-python-headless
+  - tsaug
+  - einops
