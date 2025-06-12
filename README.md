@@ -45,9 +45,21 @@ TODO: Not yet fully implemented
 
 ### Todo:
 - [ ] Clean up src/
-- [ ] Find out why Time-Transformer AAE does not accept some datasets, but others
 - [ ] Benchmark transformers mentioned in Sommers et al. 2025¹
-  - [ ] Set up TTS-GAN
+
+| Architecture         | Repository                                    | Task                         |
+|----------------------|-----------------------------------------------|------------------------------|
+| TimeGAN              | https://github.com/jsyoon0823/TimeGAN         | Multivariate TSG             |
+| TTS-GAN              | https://github.com/imics-lab/tts-gan          | Multivariate TSG             |
+| TsT-GAN              |                                               | Multivariate TSG             |
+| Time-Transformer AAE | https://github.com/Lysarthas/Time-Transformer | Multivariate TSG             |
+| TTS-CGAN             |                                               | Multivariate Conditional TSG |
+| MTS-CGAN             |                                               | Multivariate Conditional TSG |
+| DSAT-ECG             |                                               | Multivariate Conditional TSG |
+| Time Weaver          |                                               | Multivariate Conditional TSG |
+
+
+
 
 
 1: A. Sommers, L Cummins, S. Mittal, S Rahimi, M Seale, J Jaboure, T Arnold, "A Survey of Transformer Enabled
