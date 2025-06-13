@@ -1,0 +1,8 @@
+module purge 
+
+module load torchvision
+module load TensorFlow
+
+pushd $(dirname "${BASH_SOURCE[0]}")
+pip install -r requirements.txt
+popd
