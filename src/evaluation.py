@@ -53,7 +53,7 @@ def calculate_dtw(ori_data,comp_data):
     return average_distance_dtw
 
 
-def evaluate_data(ori_data, gen_data, model_name, dataset_name, method_list='[C-FID,MDD,ACD,SD,KD,ED,DTW,t-SNE,Distribution]', cuda_device=None):
+def evaluate_data(ori_data, gen_data, model_name, dataset_name, method_list='[DS,PS,C-FID,MDD,ACD,SD,KD,ED,DTW,t-SNE,Distribution]', cuda_device=None):
     show_with_start_divider(f"Starting Evalution")
 
     device = determine_device(cuda_device)
@@ -92,13 +92,13 @@ def evaluate_data(ori_data, gen_data, model_name, dataset_name, method_list='[C-
 
     # Model-based measures
     if 'DS' in method_list:
-        iter_disc = cfg.get('iter_disc',2000)
-        rnn_name = cfg.get('rnn_name','lstm')
+        iter_disc = 2000
+        rnn_name = 'lstm'
         disc = discriminative_score_metrics(ori_data, gen_data, iterations = iter_disc, rnn_name = rnn_name)
         result['DS'] = disc
     if 'PS' in method_list:
-        iter_pred = cfg.get('iter_disc',2000)
-        rnn_name = cfg.get('rnn_name','lstm')
+        iter_pred = 2000
+        rnn_name = 'lstm'
         pred = predictive_score_metrics(ori_data, gen_data, iterations = iter_pred, rnn_name = rnn_name)
         result['PS'] = pred
     if 'C-FID' in method_list:
