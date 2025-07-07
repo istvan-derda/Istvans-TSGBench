@@ -14,7 +14,7 @@ curl \
 	-H "Email: wi34sasa@studserv.uni-leipzig.de" \
 	-d "Started TimeGAN on Dataset D$DATASET_NO (Job ID: $SLURM_JOB_ID)" ntfy.sh/istvanshpcunileipzig
 
-source env/sc_uni_leipzig/init.bash
+source env/default/init.bash
 python run_time_gan.py --dataset_no $DATASET_NO
 
 curl \
