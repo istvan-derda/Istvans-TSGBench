@@ -11,7 +11,9 @@ dependencies:
 - conda-forge::pyprojroot=0.3.0
 - pip
 - pip:
+  - protobuf==3.20.0
   - torch==1.13.1
   - mgzip==0.2.1
   - dtaidistance==2.3.12
   - tensorflow==1.15
+

@@ -138,7 +138,7 @@ def evaluate_data(ori_data, gen_data, model_name, dataset_name, method_list='[DS
     #print(f'Evaluation results:{result}.')
 
     if isinstance(result, dict):
-        result_path = os.path.join(result_path, f'{combined_name}.json')
+        result_path = os.path.join(result_path, f'numeric_{combined_name}.json')
         write_json_data(result, result_path)
         print(f'Evaluation results saved to {result_path}.')
     
