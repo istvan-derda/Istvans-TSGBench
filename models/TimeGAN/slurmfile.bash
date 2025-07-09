@@ -1,22 +1,20 @@
 #!/bin/bash
 #SBATCH -J TimeGAN
-#SBATCH --time=1-00:00:00
-#SBATCH --array=2-7
+#SBATCH --time=2-00:00:00
+#SBATCH --array=3,4,6,7
 #SBATCH --partition=clara
-#SBATCH --gpus=v100
-#SBATCH --mem=4G
-#SBATCH -o jobfiles/log/%x.out-%j
-#SBATCH -e jobfiles/log/%x.err-%j
+#SBATCH --mem=16G
+#SBATCH -o jobfiles/%x_%A_%a.out
+#SBATCH -e jobfiles/%x_%A_%a.err
 
 DATASET_NO=$SLURM_ARRAY_TASK_ID
 
 curl \
-	-H "Email: wi34sasa@studserv.uni-leipzig.de" \
 	-d "Started TimeGAN on Dataset D$DATASET_NO (Job ID: $SLURM_JOB_ID)" ntfy.sh/istvanshpcunileipzig
 
-source env/default/init.bash
+eval "$(conda shell.bash hook)"
+conda activate time-gan
 python run_time_gan.py --dataset_no $DATASET_NO
 
 curl \
-	-H "Email: wi34sasa@studserv.uni-leipzig.de" \
 	-d "Finished TimeGAN on Dataset D$DATASET_NO (Job ID: $SLURM_JOB_ID)" ntfy.sh/istvanshpcunileipzig
