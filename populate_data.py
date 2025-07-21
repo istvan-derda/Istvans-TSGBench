@@ -1,3 +1,4 @@
+import pickle
 from urllib import request
 import zipfile
 import gzip
@@ -5,16 +6,17 @@ import shutil
 import os
 import time
 import sys
-import pandas as pd
-from scipy.io import arff
-from pyprojroot import here
 import re
 
-from src.preprocess import preprocess_data
-from src.utils import make_sure_path_exist
-
+import mgzip
+import pandas as pd
+import numpy as np
+from scipy.io import arff
+from pyprojroot import here
+from sklearn.preprocessing import MinMaxScaler
 
 raw_data_dir = here('data/ori_raw')
+ori_data_dir = here('data/ori')
 
 urls = {
     'D2_D3': 'https://github.com/jsyoon0823/TimeGAN/raw/refs/heads/master/data/stock_data.csv',
@@ -26,6 +28,7 @@ urls = {
 
 def main():
     populate_D2_D3_stock()
+    populate_D2a_D3a_stock_novolume()
     populate_D4_exchange()
     populate_D5_D6_energy()
     populate_D7_eeg()
@@ -34,7 +37,7 @@ def main():
 def populate_D2_D3_stock():
     print_populate_start('D2_D3_stock')
     temp_path = download_dataset(url=urls['D2_D3'])
-    raw_data_path = persist(temp_path, 'D2_D3_stock.csv')
+    raw_data_path = persist_raw(temp_path, 'D2_D3_stock.csv')
 
     preprocess_data(
         ori_data_path=raw_data_path,
@@ -48,12 +51,30 @@ def populate_D2_D3_stock():
         seq_length=128 # TSGBench ori 125
     )
 
+def populate_D2a_D3a_stock_novolume():
+    print_populate_start('D2a_D3a_stock_novolume')
+    temp_path = download_dataset(url=urls['D2_D3'])
+    remove_csv_column(temp_path, 'Volume')
+    raw_data_path = persist_raw(temp_path, 'D2a_D3a_stock_novolume.csv')
+
+    preprocess_data(
+        ori_data_path=raw_data_path,
+        dataset_name='D2a_stock_novolume',
+        seq_length=24
+    )
+
+    preprocess_data(
+        ori_data_path=raw_data_path,
+        dataset_name='D3a_stock_long_novolume',
+        seq_length=128 # TSGBench ori 125
+    )
+
 
 def populate_D4_exchange():
     print_populate_start('D4_exchange')
     temp_path = download_dataset(url=urls['D4'])
     temp_path = ungzip(temp_path)
-    raw_data_path = persist(temp_path, 'D4_exchange.csv')
+    raw_data_path = persist_raw(temp_path, 'D4_exchange.csv')
 
     preprocess_data(
         ori_data_path=raw_data_path,
@@ -67,7 +88,7 @@ def populate_D5_D6_energy():
     temp_path = download_dataset(url=urls['D5_D6'])
     temp_path = unzip(temp_path, data_path_in_zip='energydata_complete.csv')
     temp_path = remove_csv_column(temp_path, 'date')
-    raw_data_path = persist(temp_path, 'D5_D6_energy.csv')
+    raw_data_path = persist_raw(temp_path, 'D5_D6_energy.csv')
 
     preprocess_data(
         ori_data_path=raw_data_path,
@@ -88,7 +109,7 @@ def populate_D7_eeg():
     temp_path = unzip(temp_path, data_path_in_zip='EEG Eye State.arff')
     temp_path = arff2csv(temp_path)
     temp_path = remove_csv_column(temp_path, 'eyeDetection')
-    raw_data_path = persist(temp_path, 'D7_eeg.csv')
+    raw_data_path = persist_raw(temp_path, 'D7_eeg.csv')
 
     preprocess_data(
         ori_data_path=raw_data_path,
@@ -98,6 +119,9 @@ def populate_D7_eeg():
    
 
 def print_populate_start(dataset_name):
+    print("""
+=====================================
+          """)
     print(f"Retrieving {dataset_name} dataset")
 
 
@@ -107,10 +131,10 @@ def download_dataset(url):
     return file_path
 
 
-def persist(temp_path, filename):
+def persist_raw(temp_path, filename):
+    os.makedirs(raw_data_dir, exist_ok=True)
     dest_path = os.path.join(raw_data_dir, filename)
     print(f"Persisting {filename} at {dest_path}")
-    make_sure_path_exist(dest_path)
     shutil.move(temp_path, dest_path)
     return dest_path
 
@@ -159,6 +183,59 @@ def urlretrieve_reporthook(count, block_size, _):
     kb_s = int(progress_bytes / (1024 * duration))
     sys.stdout.write(f"\r... {round(progress_bytes / (1024 * 1024), 1)} MB, {kb_s} KB/s, {round(duration)} seconds passed")
     sys.stdout.flush()
+
+
+def preprocess_data(ori_data_path, dataset_name, seq_length, valid_ratio = 0.1):
+    print(f"Preprocessing {dataset_name}")
+
+    df = pd.read_csv(ori_data_path)
+
+    # interpolate missing values
+    df = df.interpolate(axis=0) # tsgbench uses other axis oO
+   
+    # scale data to feature range 0..1
+    scaled_df = (df - df.min().min()) / (df.max().max() - df.min().min())
+
+    windowed_data = sliding_window_view(scaled_df.to_numpy(), seq_length)
+
+    # Shuffle
+    idx = np.random.permutation(len(windowed_data))
+    data = windowed_data[idx]
+
+    valid_len = int(data.shape[0] * (valid_ratio)) 
+    valid_data = data[:valid_len]
+    train_data = data[valid_len:]
+
+    dest_dir = str(here(f"data/ori/{dataset_name}/"))
+    print(f"Persisting preprocessed {dataset_name} to {dest_dir}")
+    os.makedirs(dest_dir, exist_ok=True)
+
+    with mgzip.open(f"{dest_dir}/{dataset_name}_train.pkl", 'w') as file:
+        pickle.dump(train_data, file)
+    with mgzip.open(f"{dest_dir}/{dataset_name}_valid.pkl", 'w') as file:
+        pickle.dump(valid_data, file)
+
+
+def sliding_window_view(data, window_size, step=1):
+    if data.ndim != 2:
+        raise ValueError("Input array must be 2D")
+    L, C = data.shape  # Length and Channels
+    if L < window_size:
+        raise ValueError("Window size must be less than or equal to the length of the array")
+
+    # Calculate the number of windows B
+    B = L - window_size + 1
+    
+    # Shape of the output array
+    new_shape = (B, window_size, C)
+    
+    # Calculate strides
+    original_strides = data.strides
+    new_strides = (original_strides[0],) + original_strides  # (stride for L, stride for W, stride for C)
+
+    # Create the sliding window view
+    strided_array = np.lib.stride_tricks.as_strided(data, shape=new_shape, strides=new_strides)
+    return strided_array
 
 
 if __name__ == "__main__":
