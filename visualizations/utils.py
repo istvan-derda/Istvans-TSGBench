@@ -6,7 +6,7 @@ from pyprojroot import here
 
 
 def ori_dataset_path(no):
-    paths = list(here('data/ori').glob(f"D{no}*/*train.pkl"))
+    paths = list(here('data/ori').glob(f"D{no}_*/*train.pkl"))
     assert len(paths) == 1
     return paths[0]
 
