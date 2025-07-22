@@ -1,0 +1,9 @@
+run_transfusion *args: docker-build
+    docker run --rm \
+    -v $(pwd)/../../:/TSGBench \
+    -w /TSGBench/models/TransFusion \
+    transfusion \
+    python run_transfusion.py {{args}}
+
+docker-build:
+    docker build -t transfusion docker-image
