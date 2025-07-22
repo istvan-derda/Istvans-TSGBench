@@ -194,9 +194,9 @@ def preprocess_data(ori_data_path, dataset_name, seq_length, valid_ratio = 0.1):
     df = df.interpolate(axis=0) # tsgbench uses other axis oO
    
     # scale data to feature range 0..1
-    scaled_df = (df - df.min().min()) / (df.max().max() - df.min().min())
+    df = (df - df.min().min()) / (df.max().max() - df.min().min())
 
-    windowed_data = sliding_window_view(scaled_df.to_numpy(), seq_length)
+    windowed_data = sliding_window_view(df.to_numpy(), seq_length)
 
     # Shuffle
     idx = np.random.permutation(len(windowed_data))
