@@ -8,9 +8,9 @@
 #SBATCH -o jobfiles/%x_%A_%a.out
 #SBATCH -e jobfiles/%x_%A_%a.err
 
-curl -d "Started TransFusion on Dataset D$DATASET_NO (Job ID: $SLURM_JOB_ID)" ntfy.sh/istvanshpcunileipzig
-
 DATASET_NO=$SLURM_ARRAY_TASK_ID
+
+curl -d "Started TransFusion on Dataset D$DATASET_NO (Job ID: $SLURM_JOB_ID)" ntfy.sh/istvanshpcunileipzig
 
 module purge
 pip freeze --user | xargs pip uninstall -y
