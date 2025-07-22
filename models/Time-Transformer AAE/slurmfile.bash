@@ -3,9 +3,11 @@
 #SBATCH --time=03:00:00
 #SBATCH --array=2-7
 #SBATCH --partition=clara
-#SBATCH --gpus=v100
+#SBATCH --gpus=rtx2080ti
 #SBATCH --mem=8G
-#SBATCH -o jobfiles/log/%x.out-%j
+#SBATCH -o jobfiles/%x_%A_%a.out
+#SBATCH -e jobfiles/%x_%A_%a.err
+
 
 DATASET_NO=$SLURM_ARRAY_TASK_ID
 
