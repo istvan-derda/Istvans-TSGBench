@@ -51,24 +51,6 @@ def populate_D2_D3_stock():
         seq_length=128 # TSGBench ori 125
     )
 
-def populate_D2a_D3a_stock_novolume():
-    print_populate_start('D2a_D3a_stock_novolume')
-    temp_path = download_dataset(url=urls['D2_D3'])
-    remove_csv_column(temp_path, 'Volume')
-    raw_data_path = persist_raw(temp_path, 'D2a_D3a_stock_novolume.csv')
-
-    preprocess_data(
-        ori_data_path=raw_data_path,
-        dataset_name='D2a_stock_novolume',
-        seq_length=24
-    )
-
-    preprocess_data(
-        ori_data_path=raw_data_path,
-        dataset_name='D3a_stock_long_novolume',
-        seq_length=128 # TSGBench ori 125
-    )
-
 
 def populate_D4_exchange():
     print_populate_start('D4_exchange')
