@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH -J TimeGAN
-#SBATCH --time=2-00:00:00
-#SBATCH --array=3,4,6,7
-#SBATCH --partition=clara
+#SBATCH --time=4-00:00:00
+#SBATCH --array=2-7
+#SBATCH --partition=polaris-long
 #SBATCH --mem=16G
 #SBATCH -o jobfiles/%x_%A_%a.out
 #SBATCH -e jobfiles/%x_%A_%a.err
