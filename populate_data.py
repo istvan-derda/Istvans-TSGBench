@@ -28,7 +28,6 @@ urls = {
 
 def main():
     populate_D2_D3_stock()
-    populate_D2a_D3a_stock_novolume()
     populate_D4_exchange()
     populate_D5_D6_energy()
     populate_D7_eeg()
