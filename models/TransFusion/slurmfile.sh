@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J TransFusion
-#SBATCH --time=03:00:00
+#SBATCH --time=2-00:00:00
 #SBATCH --array=2-7
 #SBATCH --partition=clara
 #SBATCH --gpus=rtx2080ti
