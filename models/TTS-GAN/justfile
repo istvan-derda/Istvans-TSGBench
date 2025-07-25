@@ -1,0 +1,4 @@
+pull-tts-gan:
+    rm -rf TTS_GAN
+    git clone git@github.com:istvan-derda/istvans-tts-gan.git TTS_GAN
+    $(cd TTS_GAN && git checkout 8c2a6b27b84e78feb7a367181682378c82592b44)
