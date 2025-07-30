@@ -33,7 +33,7 @@ def persist_gen_data(data):
 def get_dataset_name():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset_no')
-    args = parser.parse_args()
+    args, _ = parser.parse_known_args()
 
     dataset_names = {
         '2': 'D2_stock',
