@@ -27,13 +27,11 @@ DATASET_NO=$SLURM_ARRAY_TASK_ID
 curl -d "Started TTS_GAN job on Dataset D$DATASET_NO (Job ID: $SLURM_JOB_ID)" ntfy.sh/istvanshpcunileipzig
 log_progress "Started TTS_GAN job on Dataset D$DATASET_NO (Job ID: $SLURM_JOB_ID)"
 
-log_progress "Resetting environment"
-module purge
-pip freeze --user | xargs pip uninstall -y
-
 log_progress "Setting up environment"
+module purge
 module load CUDA/12.6.0
 module load Python/3.10.8-GCCcore-12.2.0
+pip freeze --user | xargs pip uninstall -y
 pip install -r requirements.txt
 
 
