@@ -14,17 +14,28 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 def main():
     # Load Data
     train_data = load_train_data()
+    ori_shape = train_data.shape
 
     # Reshape shape from (BH, length, channel) to (BH, channel, 1, length)
     train_data = np.transpose(train_data, (0, 2, 1))
-    train_data = train_data.reshape(train_data.shape[0], train_data.shape[1], 1, train_data.shape[2])
+    train_data = train_data.reshape(ori_shape[0], ori_shape[1], 1, ori_shape[2])
 
     # Train Model
-    model = train_tts_gan(train_data)
+    seq_len = train_data.shape[3]
+    if seq_len == 24:
+        patch_size = 12
+    elif seq_len == 125:
+        patch_size = 25
+    else:
+        raise NotImplementedError(f"No patch_size implemented for timeseries sequence length {seq_len}")
+        
+    model = train_tts_gan(train_data, patch_size)
 
     # Sample Synthetic Timeseries
-    sample_count, _, _, seq_len = train_data.shape
+    sample_count = train_data.shape[0]
     gen_data = generate(model, sample_count, seq_len)
+    gen_data = gen_data.reshape(ori_shape[0], ori_shape[1], ori_shape[2])
+    gen_data = np.transpose(gen_data, (0, 2, 1))
 
     # Persist Generated Timeseries
     persist_gen_data(gen_data)
