@@ -12,14 +12,21 @@ from TTS_GAN.train_GAN import train_tts_gan
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def main():
+    # Load Data
     train_data = load_train_data()
 
-    sample_count, seq_len, _ = train_data.shape
+    # Reshape shape from (BH, length, channel) to (BH, channel, 1, length)
+    train_data = np.transpose(train_data, (0, 2, 1))
+    train_data = train_data.reshape(train_data.shape[0], train_data.shape[1], 1, train_data.shape[2])
 
+    # Train Model
     model = train_tts_gan(train_data)
 
+    # Sample Synthetic Timeseries
+    sample_count, _, _, seq_len = train_data.shape
     gen_data = generate(model, sample_count, seq_len)
 
+    # Persist Generated Timeseries
     persist_gen_data(gen_data)
 
 
