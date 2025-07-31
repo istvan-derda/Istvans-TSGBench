@@ -34,7 +34,7 @@ def main():
     # Sample Synthetic Timeseries
     sample_count = train_data.shape[0]
     gen_data = generate(model, sample_count, seq_len)
-    gen_data = gen_data.reshape(ori_shape[0], ori_shape[1], ori_shape[2])
+    gen_data = gen_data.reshape(ori_shape[0], ori_shape[2], ori_shape[1])
     gen_data = np.transpose(gen_data, (0, 2, 1))
 
     # Persist Generated Timeseries
