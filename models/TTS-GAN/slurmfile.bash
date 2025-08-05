@@ -31,12 +31,11 @@ log_progress "Setting up environment"
 module purge
 module load CUDA/12.6.0
 module load Python/3.10.8-GCCcore-12.2.0
-pip freeze --user | xargs pip uninstall -y
 pip install -r requirements.txt
 
 
 log_progress "Starting Training Script"
-python run_tts_gan.py --dataset_no 2 --exp_name D2
+python run_tts_gan.py --dataset_no $DATASET_NO --exp_name D$DATASET_NO
 log_progress "Training Script Terminated"
 
 curl -d "Finished TTS_GAN job on Dataset D$DATASET_NO (Job ID: $SLURM_JOB_ID)" ntfy.sh/istvanshpcunileipzig
