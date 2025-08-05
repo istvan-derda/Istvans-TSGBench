@@ -22,6 +22,7 @@ def main():
 
     # Train Model
     seq_len = train_data.shape[3]
+    channels = train_data.shape[1]
     if seq_len == 24:
         patch_size = 12
     elif seq_len == 125:
@@ -29,7 +30,7 @@ def main():
     else:
         raise NotImplementedError(f"No patch_size implemented for timeseries sequence length {seq_len}. train_data.shape: {train_data.shape}")
         
-    model = train_tts_gan(train_data, patch_size)
+    model = train_tts_gan(train_data, patch_size=patch_size, seq_len=seq_len, in_channels=channels)
 
     # Sample Synthetic Timeseries
     sample_count = train_data.shape[0]

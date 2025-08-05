@@ -5,4 +5,4 @@ test_run:
 pull-tts-gan:
     rm -rf TTS_GAN
     git clone git@github.com:istvan-derda/istvans-tts-gan.git TTS_GAN
-    $(cd TTS_GAN && git checkout 84d777e1e9e185d30124eecbf45f953ce88d31c8)
+    $(cd TTS_GAN && git checkout 105a121fd9eb4b6678bb801620ba0511d7b25f0a)
