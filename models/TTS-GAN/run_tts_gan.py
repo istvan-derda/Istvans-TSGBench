@@ -18,7 +18,7 @@ def main():
 
     # Reshape shape from (BH, length, channel) to (BH, channel, 1, length)
     train_data = np.transpose(train_data, (0, 2, 1))
-    train_data = train_data.reshape(ori_shape[0], ori_shape[1], 1, ori_shape[2])
+    train_data = train_data.reshape(ori_shape[0], ori_shape[2], 1, ori_shape[1])
 
     # Train Model
     seq_len = train_data.shape[3]
@@ -27,7 +27,7 @@ def main():
     elif seq_len == 125:
         patch_size = 25
     else:
-        raise NotImplementedError(f"No patch_size implemented for timeseries sequence length {seq_len}")
+        raise NotImplementedError(f"No patch_size implemented for timeseries sequence length {seq_len}. train_data.shape: {train_data.shape}")
         
     model = train_tts_gan(train_data, patch_size)
 
