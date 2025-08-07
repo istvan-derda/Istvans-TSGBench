@@ -1,5 +1,5 @@
 test_run:
-    python run_tts_gan.py --dataset_no 2 --exp_name D2
+    python run_tts_gan.py --dataset_no 2 --exp_name D2_Testrun --max_iter 50
 
 
 pull-tts-gan:
