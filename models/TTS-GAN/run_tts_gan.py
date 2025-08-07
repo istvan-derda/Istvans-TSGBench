@@ -18,7 +18,7 @@ def main():
 
     # Reshape shape from (BH, length, channel) to (BH, channel, 1, length)
     train_data = np.transpose(train_data, (0, 2, 1))
-    train_data = train_data.reshape(ori_shape[0], ori_shape[2], 1, ori_shape[1])
+    train_data = train_data.reshape(train_data.shape[0], train_data.shape[1], 1, train_data.shape[2])
 
     # Train Model
     seq_len = train_data.shape[3]
@@ -27,6 +27,8 @@ def main():
         patch_size = 12
     elif seq_len == 128:
         patch_size = 16
+    elif seq_len == 3:
+        patch_size = 3
     else:
         raise NotImplementedError(f"No patch_size implemented for timeseries sequence length {seq_len}. train_data.shape: {train_data.shape}")
         
@@ -34,7 +36,7 @@ def main():
 
     # Sample Synthetic Timeseries
     sample_count = train_data.shape[0]
-    gen_data = generate(model, sample_count, seq_len)
+    gen_data = generate(model, sample_count)
     gen_data = gen_data.reshape(ori_shape[0], ori_shape[2], ori_shape[1])
     gen_data = np.transpose(gen_data, (0, 2, 1))
 
@@ -42,13 +44,14 @@ def main():
     persist_gen_data(gen_data)
 
 
-def generate(model, sample_count, seq_len):
+def generate(model, sample_count):
     synthetic_data = []
+    latent_dim = 100
     for _ in range(sample_count):
-        random_noise = torch.tensor(np.random.normal(0, 1, (1, seq_len))).to(device, dtype=float32)
+        random_noise = torch.tensor(np.random.normal(0, 1, (1, latent_dim))).to(device, dtype=torch.float32)
         sample = model(random_noise).to('cpu').detach().numpy()
         synthetic_data.append(sample)
-    return synthetic_data
+    return np.array(synthetic_data)
 
 if __name__ == '__main__':
     main()
