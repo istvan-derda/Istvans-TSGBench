@@ -1,6 +1,8 @@
 {
   "name": "TSGBench",
-  "image": "docker.io/python:3.7-bookworm",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "customizations": {
     "vscode": {
       "extensions": ["ms-toolsai.jupyter"],
