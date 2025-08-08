@@ -1,5 +1,4 @@
 import os
-import mgzip
 import pickle
 import json
 import torch
@@ -28,16 +27,6 @@ def make_sure_path_exist(path):
         dir_path = os.path.dirname(path)
     os.makedirs(dir_path, exist_ok=True)
 
-def read_mgzip_data(path):
-    with mgzip.open(path, 'rb') as f:
-        data = pickle.load(f)
-    return data
-
-def write_mgzip_data(content, path):
-    make_sure_path_exist(path)
-    with mgzip.open(path, 'wb') as f:
-        pickle.dump(content, f)
-
 def write_json_data(content, path):
     make_sure_path_exist(path)
     with open(path, 'w') as json_file:
@@ -53,34 +42,3 @@ def determine_device(cuda_device):
         else:
             device = torch.device('cuda', 0)
     return device
-
-class MinMaxScaler():
-    """Min Max normalizer.
-    Args:
-    - data: original data
-
-    Returns:
-    - norm_data: normalized data
-    """
-    def fit_transform(self, data): 
-        self.fit(data)
-        scaled_data = self.transform(data)
-        return scaled_data
-
-
-    def fit(self, data):    
-        self.mini = np.min(data, 0)
-        self.range = np.max(data, 0) - self.mini
-        return self
-        
-
-    def transform(self, data):
-        numerator = data - self.mini
-        scaled_data = numerator / (self.range + 1e-7)
-        return scaled_data
-
-    
-    def inverse_transform(self, data):
-        data *= self.range
-        data += self.mini
-        return data

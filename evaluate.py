@@ -1,6 +1,4 @@
 from src.evaluation import evaluate_data
-import mgzip
-import pickle
 import argparse
 from pyprojroot import here
 
@@ -33,14 +31,12 @@ def ori_load(dataset_no):
     paths = list(here('data/ori').glob(f'D{dataset_no}*/D{dataset_no}*train.pkl'))
     assert len(paths) == 1
     path = paths[0]
-    with mgzip.open(str(path), 'rb') as f:
-        train_data = pickle.load(f)
+    train_data = np.load(str(path))
 
     paths = list(here('data/ori').glob(f'D{dataset_no}*/D{dataset_no}*valid.pkl'))
     assert len(paths) == 1
     path = paths[0]
-    with mgzip.open(str(path), 'rb') as f:
-        valid_data = pickle.load(f)
+    valid_data = np.load(str(path))
     return train_data, valid_data
 
 
@@ -48,8 +44,7 @@ def gen_load(model_name, dataset_no):
     paths = list(here('models').glob(f'{model_name}*/gen/D{dataset_no}*/D{dataset_no}*.pkl'))
     assert len(paths) == 1
     path = paths[0]
-    with mgzip.open(str(path)) as f:
-        data = pickle.load(f)
+    data = np.load(str(path))
     gen_filename = path.name
     return data, gen_filename
 

@@ -10,4 +10,3 @@ RUN pip install einops
 RUN pip install tensorboard
 RUN pip install numba
 RUN pip install pyprojroot
-RUN pip install mgzip

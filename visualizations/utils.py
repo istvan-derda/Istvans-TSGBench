@@ -1,6 +1,4 @@
 import matplotlib.pyplot as plt
-import mgzip
-import pickle
 import random
 from pyprojroot import here
 
@@ -13,8 +11,7 @@ def ori_dataset_path(no):
 
 def _read_dataset(dataset_path):
     
-    with mgzip.open(str(dataset_path), 'rb') as f:
-        data = pickle.load(f)
+    data = np.load(str(dataset_path))
 
     file_name = dataset_path.name
     return data, file_name
