@@ -23,7 +23,7 @@ This approach is recommended on systems where you cannot install Docker or don't
 - Use any IDE you are comfortable with or just the terminal
 - Check if you have conda installed by running `conda` in the terminal.
   - If not: Follow the installation instructions for [miniconda]() or check the documentation of your high performance computing cluster on how to enable conda.
-- Create the conda environment by running `conda env create` in the project root and activate it with `conda activate tsg-bench`
+- Create the conda environment by running `conda env create` in the project root and activate it with `conda activate tsgbench`
 
 
 ## Use TSGBench
