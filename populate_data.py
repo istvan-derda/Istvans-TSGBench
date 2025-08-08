@@ -11,7 +11,6 @@ import pandas as pd
 import numpy as np
 from scipy.io import arff
 from pyprojroot import here
-from sklearn.preprocessing import MinMaxScaler
 
 raw_data_dir = here('data/ori_raw')
 ori_data_dir = here('data/ori')
