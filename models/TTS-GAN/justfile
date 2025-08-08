@@ -6,3 +6,7 @@ pull-tts-gan:
     rm -rf TTS_GAN
     git clone git@github.com:istvan-derda/istvans-tts-gan.git TTS_GAN
     $(cd TTS_GAN && git fetch --tags && git checkout tags/TTS-GAN-Run1)
+
+
+get-gen:
+    rsync -avz --progress scuni:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .
