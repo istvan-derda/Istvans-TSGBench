@@ -5,7 +5,7 @@
   },
   "customizations": {
     "vscode": {
-      "extensions": ["ms-toolsai.jupyter"],
+      "extensions": ["ms-toolsai.jupyter", "ms-python.python"],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python"
       }
