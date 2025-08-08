@@ -19,7 +19,6 @@
 ],
 
   "features": {
-    "ghcr.io/devcontainers/features/conda:1": {},
     "ghcr.io/guiyomh/features/just:0": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers/features/git:1": {}
