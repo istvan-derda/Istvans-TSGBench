@@ -3,8 +3,6 @@ from __future__ import division
 from __future__ import print_function
 import numpy as np
 import os
-import pickle
-import mgzip
 import argparse
 import tensorflow as tf
 from sklearn.metrics import accuracy_score
@@ -312,68 +310,3 @@ def batch_generator(data, time, batch_size):
 	T_mb = list(time[i] for i in train_idx)
 
 	return X_mb, T_mb
-
-
-
-# ====================================================
-if __name__=="__main__":
-	parser = argparse.ArgumentParser(description='manual to this script')
-	parser.add_argument('--method_name', type=str, default = None)
-	parser.add_argument('--dataset_name', type=str, default = None)
-	parser.add_argument('--dataset_state', type=str, default = None)
-	parser.add_argument('--gpu_id', type=str, default = None)
-	parser.add_argument('--gpu_fraction', type=float, default = None)
-	args = parser.parse_args()
-
-	method_name = args.method_name
-	dataset_name = args.dataset_name
-	dataset_state = args.dataset_state
-	gpu_id = args.gpu_id
-	gpu_fraction = args.gpu_fraction
-
-
-	os.environ["CUDA_VISIBLE_DEVICES"] = gpu_id 
-	gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpu_fraction)
-	sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
-
-
-
-	with mgzip.open('./data/' + dataset_name + '_' + dataset_state + '.pkl', 'rb') as f:
-		ori_data = pickle.load(f)
-
-
-	with mgzip.open('./data/' + method_name + '/' + dataset_name + '_' + dataset_state + '_gen.pkl', 'rb') as f:
-		generated_data = pickle.load(f)
-	generated_data = np.array(generated_data)
-
-	print(ori_data.shape, generated_data.shape)
-
-	# ===========================================
-	rnn_name = 'lstm'
-	iter_disc = 2000
-	iter_pred = 5000
-
-	disc_all = []
-	time_all = []
-	for i in range(0,5):
-		start = time.time()
-		temp_disc = discriminative_score_metrics(ori_data, generated_data, iterations = iter_disc, rnn_name = rnn_name)
-		end = time.time()
-		disc_all.append(temp_disc)
-		time_all.append(end-start)
-
-
-	pred_all = []
-	for i in range(0,5):
-		start = time.time()
-		temp_pred = predictive_score_metrics(ori_data, generated_data, iterations = iter_pred, rnn_name = rnn_name)
-		end = time.time()
-		pred_all.append(temp_pred)
-		time_all.append(end-start)
-
-	disc_all = np.array(disc_all)
-	pred_all = np.array(pred_all)
-	time_all = np.array(time_all)
-
-	with open('../data/' + method_name + '/' + dataset_name + '_' + dataset_state + '_eval_model.pkl', 'wb') as f:
-		pickle.dump([disc_all, pred_all, time_all], f)

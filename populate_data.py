@@ -1,4 +1,3 @@
-import pickle
 from urllib import request
 import zipfile
 import gzip
@@ -8,7 +7,6 @@ import time
 import sys
 import re
 
-import mgzip
 import pandas as pd
 import numpy as np
 from scipy.io import arff
@@ -191,10 +189,10 @@ def preprocess_data(ori_data_path, dataset_name, seq_length, valid_ratio = 0.1):
     print(f"Persisting preprocessed {dataset_name} to {dest_dir}")
     os.makedirs(dest_dir, exist_ok=True)
 
-    with mgzip.open(f"{dest_dir}/{dataset_name}_train.pkl", 'w') as file:
-        pickle.dump(train_data, file)
-    with mgzip.open(f"{dest_dir}/{dataset_name}_valid.pkl", 'w') as file:
-        pickle.dump(valid_data, file)
+    train_path = f"{dest_dir}/{dataset_name}_train.npy"
+    valid_path = f"{dest_dir}/{dataset_name}_valid.npy"
+    np.save(train_path, train_data)
+    np.save(valid_path, valid_data)
 
 
 def sliding_window_view(data, window_size, step=1):

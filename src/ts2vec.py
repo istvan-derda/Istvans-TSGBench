@@ -2,7 +2,6 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import TensorDataset, DataLoader
 import numpy as np
-import pickle
 import random
 from datetime import datetime
 from torch import nn
@@ -464,7 +463,7 @@ def hierarchical_contrastive_loss(z1, z2, alpha=0.5, temporal_unit=0):
         if alpha != 0:
             loss += alpha * instance_contrastive_loss(z1, z2)
         d += 1
-    return loss / d
+    return §loss / d
 
 def instance_contrastive_loss(z1, z2):
     B, T = z1.size(0), z1.size(1)
@@ -495,13 +494,6 @@ def temporal_contrastive_loss(z1, z2):
     loss = (logits[:, t, T + t - 1].mean() + logits[:, T + t, t].mean()) / 2
     return loss
 
-def pkl_save(name, var):
-    with open(name, 'wb') as f:
-        pickle.dump(var, f)
-
-def pkl_load(name):
-    with open(name, 'rb') as f:
-        return pickle.load(f)
     
 def torch_pad_nan(arr, left=0, right=0, dim=0):
     if left > 0:
