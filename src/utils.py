@@ -1,11 +1,6 @@
 import os
-import pickle
 import json
 import torch
-import numpy as np
-
-PREPROCESSING_PARAS = ['do_preprocessing','original_data_path','output_ori_path','dataset_name','use_ucr_uea_dataset','ucr_uea_dataset_name','seq_length','valid_ratio','do_normalization']
-GENERATION_PARAS = ['do_generation','model','dataset_name']
 
 def show_divider():
     print("=" * 20)
