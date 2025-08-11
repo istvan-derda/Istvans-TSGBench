@@ -1,11 +1,18 @@
 import matplotlib.pyplot as plt
 import random
 from pyprojroot import here
+import numpy as np
 
 
-def ori_dataset_path(no):
-    paths = list(here('data/ori').glob(f"D{no}_*/*train.pkl"))
-    assert len(paths) == 1
+def ori_dataset_path(dataset_no):
+    paths = list(here('data/ori').glob(f'D{dataset_no}*/D{dataset_no}*train.npy'))
+    assert len(paths) == 1, f"Expected exactly one file to match search pattern for original D{dataset_no} train dataset. Found: {paths}"
+    return paths[0]
+
+
+def gen_dataset_path(model_name, dataset_no):
+    paths = list(here('models').glob(f'{model_name}*/gen/D{dataset_no}*/D{dataset_no}*.npy'))
+    assert len(paths) == 1, f"Expected exactly one file to match search pattern for generated D{dataset_no}. Found: {paths}"
     return paths[0]
 
 
