@@ -1,6 +1,7 @@
 from src.evaluation import evaluate_data
 import argparse
 from pyprojroot import here
+import numpy as np
 
 all_datasets = [2,3,4,5,6,7]
 
@@ -28,21 +29,21 @@ def main():
 
 
 def ori_load(dataset_no):
-    paths = list(here('data/ori').glob(f'D{dataset_no}*/D{dataset_no}*train.pkl'))
-    assert len(paths) == 1
+    paths = list(here('data/ori').glob(f'D{dataset_no}*/D{dataset_no}*train.npy'))
+    assert len(paths) == 1, f"Expected exactly one file to match search pattern for original D{dataset_no} train dataset. Found: {paths}"
     path = paths[0]
     train_data = np.load(str(path))
 
-    paths = list(here('data/ori').glob(f'D{dataset_no}*/D{dataset_no}*valid.pkl'))
-    assert len(paths) == 1
+    paths = list(here('data/ori').glob(f'D{dataset_no}*/D{dataset_no}*valid.npy'))
+    assert len(paths) == 1, f"Expected exactly one file to match search pattern for original D{dataset_no} validation dataset. Found: {paths}"
     path = paths[0]
     valid_data = np.load(str(path))
     return train_data, valid_data
 
 
 def gen_load(model_name, dataset_no):
-    paths = list(here('models').glob(f'{model_name}*/gen/D{dataset_no}*/D{dataset_no}*.pkl'))
-    assert len(paths) == 1
+    paths = list(here('models').glob(f'{model_name}*/gen/D{dataset_no}*/D{dataset_no}*.npy'))
+    assert len(paths) == 1, f"Expected exactly one file to match search pattern for generated D{dataset_no}. Found: {paths}"
     path = paths[0]
     data = np.load(str(path))
     gen_filename = path.name
