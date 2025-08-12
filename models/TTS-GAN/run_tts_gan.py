@@ -27,8 +27,6 @@ def main():
         patch_size = 12
     elif seq_len == 128:
         patch_size = 16
-    elif seq_len == 3:
-        patch_size = 3
     else:
         raise NotImplementedError(f"No patch_size implemented for timeseries sequence length {seq_len}. train_data.shape: {train_data.shape}")
         
