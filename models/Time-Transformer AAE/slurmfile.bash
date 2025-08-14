@@ -29,15 +29,20 @@ log "Started Time-Transformer AAE job on Dataset D$DATASET_NO (Job ID: $SLURM_JO
 
 log "Resetting environment"
 module purge
-pip freeze --user | xargs pip uninstall -y
 
 log "Setting up environment"
 module load TensorFlow
+VENV_DIR=/tmp/slurm_job_${SLURM_JOB_ID}_venv
+python -m venv --system-site-packages $VENV_DIR
+source $VENV_DIR/bin/activate
 pip install numpy keras==2.11.0 scikit-learn==1.0.2 scipy==1.7.3 mgzip==0.2.1
 
 log "Starting Training Script"
 python run_time_transformer.py --dataset_no $DATASET_NO
 log "Training Script Terminated"
+
+deactivate
+module purge
 
 curl -d "Finished Time-Transformer AAE on Dataset D$DATASET_NO" ntfy.sh/istvanshpcunileipzig
 log "Finished Time-Transformer AAE on Dataset D$DATASET_NO"
