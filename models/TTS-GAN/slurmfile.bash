@@ -31,12 +31,19 @@ log_progress "Setting up environment"
 module purge
 module load CUDA/12.6.0
 module load Python/3.10.8-GCCcore-12.2.0
+
+VENV_DIR=/tmp/slurm_job_${SLURM_JOB_ID}_venv
+python -m venv --system-site-packages $VENV_DIR
+source $VENV_DIR/bin/activate
 pip install -r requirements.txt
 
 
 log_progress "Starting Training Script"
 python run_tts_gan.py --dataset_no $DATASET_NO --exp_name D$DATASET_NO
 log_progress "Training Script Terminated"
+
+deactivate
+module purge
 
 curl -d "Finished TTS_GAN job on Dataset D$DATASET_NO (Job ID: $SLURM_JOB_ID)" ntfy.sh/istvanshpcunileipzig
 log_progress "Finished TTS_GAN job on Dataset D$DATASET_NO (Job ID: $SLURM_JOB_ID)"
