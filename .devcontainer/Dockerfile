@@ -17,3 +17,7 @@ RUN pip install --no-cache-dir ipykernel
 RUN pip install --no-cache-dir protobuf==3.20.0
 RUN pip install --no-cache-dir torch==1.13.1
 RUN pip install --no-cache-dir dtaidistance==2.3.12
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends vim && \
+    rm -rf /var/lib/apt/lists/*
