@@ -5,7 +5,7 @@ test_run:
 init:
     rm -rf TTS_GAN
     git clone git@github.com:istvan-derda/istvans-tts-gan.git TTS_GAN
-    $(cd TTS_GAN && git fetch --tags && git checkout tags/TTS-GAN-Run1)
+    $(cd TTS_GAN && git fetch --tags && git checkout 18b3616)
 
 
 get-gen:
