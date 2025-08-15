@@ -12,3 +12,6 @@ init:
     rm -rf TransFusion
     git clone git@github.com:istvan-derda/Istvans-TransFusion.git TransFusion
     $(cd TransFusion && git checkout 695121626385687bd5439b1ab806f6f69dbe7d94)
+
+get-gen:
+    rsync -avz --progress scuni:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .
