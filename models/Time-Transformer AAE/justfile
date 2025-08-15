@@ -1,5 +1,5 @@
 get-gen:
-    rsync -avz --progress scuni:"Istvans-TSGBench/models/'$(basename "$PWD")'/gen" .
+    rsync -avz --progress scuni:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .
 
 init:
     rm -rf Time_Transformer
