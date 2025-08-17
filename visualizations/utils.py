@@ -3,6 +3,9 @@ import random
 from pyprojroot import here
 import numpy as np
 
+D2_D3_LABELS = ['Open','High','Low','Close','Adj_Close','Volume']
+D5_D6_LABELS = ["Appliances","lights","T1","RH_1","T2","RH_2","T3","RH_3","T4","RH_4","T5","RH_5","T6","RH_6","T7","RH_7","T8","RH_8","T9","RH_9","T_out","Press_mm_hg","RH_out","Windspeed","Visibility","Tdewpoint","rv1","rv2"]
+D7_LABELS = ["AF3","F7","F3","FC5","T7","P7","O1","O2","P8","T8","FC6","F4","F8","AF4"]
 
 def ori_dataset_path(dataset_no):
     paths = list(here('data/ori').glob(f'D{dataset_no}*/D{dataset_no}*train.npy'))
