@@ -16,7 +16,7 @@ def main():
     train_data = load_train_data()
     ori_shape = train_data.shape
 
-    # Reshape shape from (BH, length, channel) to (BH, channel, 1, length)
+    # Reshape shape from (sample_count, length, channel) to (sample_count, channel, 1, length)
     train_data = np.transpose(train_data, (0, 2, 1))
     train_data = train_data.reshape(train_data.shape[0], train_data.shape[1], 1, train_data.shape[2])
 
@@ -43,13 +43,10 @@ def main():
 
 
 def generate(model, sample_count):
-    synthetic_data = []
     latent_dim = 100
-    for _ in range(sample_count):
-        random_noise = torch.tensor(np.random.normal(0, 1, (1, latent_dim))).to(device, dtype=torch.float32)
-        sample = model(random_noise).to('cpu').detach().numpy()
-        synthetic_data.append(sample)
-    return np.array(synthetic_data)
+    random_noise = torch.tensor(np.random.normal(0, 1, (sample_count, latent_dim))).to(device, dtype=torch.float32)
+    synthetic_data = model(random_noise).detach().numpy()
+    return synthetic_data
 
 if __name__ == '__main__':
     main()
