@@ -61,7 +61,7 @@ def evaluate_data(ori_data, gen_data, model_name, dataset_name, method_list='[DS
 
     now = datetime.datetime.now()
     formatted_time = now.strftime("%Y%m%d-%H%M%S")
-    combined_name = f'{formatted_time}_{model_name}_{dataset_name}'
+    combined_name = f'{model_name}_{dataset_name}_{formatted_time}'
 
     if not isinstance(method_list,list):
         method_list = method_list.strip('[]')
