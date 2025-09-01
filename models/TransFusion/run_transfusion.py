@@ -13,12 +13,13 @@ def main():
     # Load Data
     train_data = load_train_data().astype(np.float32)
     seq_len = train_data.shape[1]
+    seq_count = train_data.shape[0]
 
     # Train Model
     model = train(train_data=train_data, seq_len=seq_len)
 
     # Generate Synthetic Data
-    gen = generate(model=model, len=seq_len)
+    gen = generate(model=model, len=seq_count)
 
     # Persist Synthetic Data
     persist_gen_data(gen)
