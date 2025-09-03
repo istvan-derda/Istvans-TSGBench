@@ -11,7 +11,7 @@ docker-build:
 init:
     rm -rf TransFusion
     git clone git@github.com:istvan-derda/Istvans-TransFusion.git TransFusion
-    $(cd TransFusion && git checkout 61c55d31bf8f64ec3d60e57c156a3a9b2b25ab7f)
+    $(cd TransFusion && git checkout f13a83ff5532aca8e86ec6186b9f24bd1ab70630)
 
 get-gen:
     rsync -avz --progress scuni:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .

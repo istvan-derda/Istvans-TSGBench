@@ -19,7 +19,7 @@ def main():
     model = train(train_data=train_data, seq_len=seq_len)
 
     # Generate Synthetic Data
-    gen = generate(model=model, len=seq_count)
+    gen = generate(model=model, sample_count=seq_count)
 
     # Persist Synthetic Data
     persist_gen_data(gen)
