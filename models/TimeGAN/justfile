@@ -1,2 +1,2 @@
 get-gen:
-    rsync -avz --progress scuni:"Istvans-TSGBench/models/'$(basename "$PWD")'/gen" .
+    rsync -avz --progress scuni:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .
