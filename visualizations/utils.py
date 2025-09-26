@@ -47,7 +47,11 @@ def plot_dataset(dataset_path, samplesize=3, indexes=None, labels=None, autoscal
     fig, axs = plt.subplots(samplesize, 1)
     for i in range(samplesize):
         j = random.randrange(0, len(dataset))
-        _plot_timeseries(dataset[j], axs[i], indexes, labels, autoscale)
-    handles, labels = axs[0].get_legend_handles_labels()
-    fig.legend(handles, labels)
+        if samplesize == 1:
+            _plot_timeseries(dataset[j], axs, indexes, labels, autoscale)
+        else:
+            _plot_timeseries(dataset[j], axs[i], indexes, labels, autoscale)
+    if samplesize > 1:
+        handles, labels = axs[0].get_legend_handles_labels()
+        fig.legend(handles, labels)
     fig.suptitle(file_name)
