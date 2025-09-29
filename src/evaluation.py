@@ -1,7 +1,6 @@
 import os
 import datetime
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.linalg import sqrtm
 from dtaidistance.dtw_ndim import distance as multi_dtw_distance
 from .ds_ps import discriminative_score_metrics, predictive_score_metrics
@@ -53,7 +52,7 @@ def calculate_dtw(ori_data,comp_data):
     return average_distance_dtw
 
 
-def evaluate_data(ori_data, gen_data, model_name, dataset_name, method_list='[DS,PS,C-FID,MDD,ACD,SD,KD,ED,DTW,t-SNE,Distribution]', cuda_device=None):
+def evaluate_data(ori_data, gen_data, model_name, dataset_name, method_list='[DS,PS,C-FID,MDD,ACD,SD,KD,ED,DTW,t-SNE,Distribution]', cuda_device=None, model_based_repeat_count=3):
     show_with_start_divider(f"Starting Evalution")
 
     device = determine_device(cuda_device)
@@ -94,19 +93,25 @@ def evaluate_data(ori_data, gen_data, model_name, dataset_name, method_list='[DS
     if 'DS' in method_list:
         iter_disc = 2000
         rnn_name = 'lstm'
-        disc = discriminative_score_metrics(ori_data, gen_data, iterations = iter_disc, rnn_name = rnn_name)
-        result['DS'] = disc
+        disc = []
+        for _ in range(model_based_repeat_count):
+            disc.append(discriminative_score_metrics(ori_data, gen_data, iterations = iter_disc, rnn_name = rnn_name))
+        result['DS'] = np.mean(disc)
     if 'PS' in method_list:
         iter_pred = 2000
         rnn_name = 'lstm'
-        pred = predictive_score_metrics(ori_data, gen_data, iterations = iter_pred, rnn_name = rnn_name)
+        pred = []
+        for _ in range(model_based_repeat_count):
+            pred.append(predictive_score_metrics(ori_data, gen_data, iterations = iter_pred, rnn_name = rnn_name))
         result['PS'] = pred
     if 'C-FID' in method_list:
-        fid_model = initialize_ts2vec(np.transpose(train_data, (0, 2, 1)),device)
-        ori_repr = fid_model.encode(np.transpose(ori_data,(0, 2, 1)), encoding_window='full_series')
-        gen_repr = fid_model.encode(np.transpose(gen_data,(0, 2, 1)), encoding_window='full_series')
-        cfid = calculate_fid(ori_repr,gen_repr)
-        result['C-FID'] = cfid
+        cfid = []
+        for _ in range(model_based_repeat_count):
+            fid_model = initialize_ts2vec(np.transpose(train_data, (0, 2, 1)),device)
+            ori_repr = fid_model.encode(np.transpose(ori_data,(0, 2, 1)), encoding_window='full_series')
+            gen_repr = fid_model.encode(np.transpose(gen_data,(0, 2, 1)), encoding_window='full_series')
+            cfid.append(calculate_fid(ori_repr,gen_repr))
+        result['C-FID'] = np.mean(cfid)
 
     # Feature-based measures
     if 'MDD' in method_list:
