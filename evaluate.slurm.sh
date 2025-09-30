@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH -J TSGBench Evaluation
+#SBATCH -J TSGBench_Evaluation
 #SBATCH --time=2-00:00:00
-#SBATCH --array=0-5
+#SBATCH --array=0-4
 #SBATCH --partition=clara
 #SBATCH --gpus=rtx2080ti
 #SBATCH --mem=8G
