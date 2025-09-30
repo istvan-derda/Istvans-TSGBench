@@ -103,7 +103,7 @@ def evaluate_data(ori_data, gen_data, model_name, dataset_name, method_list='[DS
         pred = []
         for _ in range(model_based_repeat_count):
             pred.append(predictive_score_metrics(ori_data, gen_data, iterations = iter_pred, rnn_name = rnn_name))
-        result['PS'] = pred
+        result['PS'] = np.mean(pred)
     if 'C-FID' in method_list:
         cfid = []
         for _ in range(model_based_repeat_count):
