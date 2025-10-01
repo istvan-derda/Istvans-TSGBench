@@ -1,0 +1,7 @@
+init:
+    rm -rf TimeVQVAE
+    git clone https://github.com/ML4ITS/TimeVQVAE.git TimeVQVAE
+    $(cd TimeVQVAE && git checkout 6e04f698a8f0d6935c2e39e044b6d2eebca121de)
+
+get-gen:
+    rsync -avz --progress scuni:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .

@@ -18,6 +18,15 @@ def load_train_data():
     return train_data
 
 
+def load_valid_data():   
+    ori_data_dir = os.path.join(data_dir, 'ori/')
+    dataset_name = get_dataset_name()
+    dataset_path = f'{ori_data_dir}{dataset_name}/{dataset_name}_valid.npy'
+    valid_data = np.load(dataset_path)
+    return valid_data
+
+
+
 def persist_gen_data(data):
     now = datetime.now()
     dataset_name = get_dataset_name()
