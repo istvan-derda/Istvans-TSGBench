@@ -24,9 +24,9 @@ def main():
     seq_len = train_data.shape[3]
     channels = train_data.shape[1]
     if seq_len == 24:
-        patch_size = 12
+        patch_size = 4 # experimental, maybe better than 12?
     elif seq_len == 128:
-        patch_size = 16
+        patch_size = 4 # experimental, maybe better than 16?
     else:
         raise NotImplementedError(f"No patch_size implemented for timeseries sequence length {seq_len}. train_data.shape: {train_data.shape}")
         
