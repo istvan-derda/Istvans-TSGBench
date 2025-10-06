@@ -5,10 +5,6 @@ sys.path.insert(0,'../') # make tsgb_utils import work
 time_vqvae_path = os.path.join(os.path.dirname(__file__), 'Time_VQVAE')
 sys.path.insert(0,time_vqvae_path) # make imports in TimeVQVAE/*.py work
 
-preprocessing_init = os.path.join(time_vqvae_path, 'preprocessing', '__init__.py')
-if not os.path.exists(preprocessing_init):
-    open(preprocessing_init, 'a').close()
-
 import torch
 from torch.utils.data import Dataset, DataLoader
 from tsgb_utils import load_train_data, load_valid_data, get_dataset_name, persist_gen_data

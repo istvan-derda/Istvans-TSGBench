@@ -1,7 +1,7 @@
 init:
     rm -rf Time_VQVAE
-    git clone https://github.com/ML4ITS/TimeVQVAE.git Time_VQVAE
-    $(cd Time_VQVAE && git checkout 6e04f698a8f0d6935c2e39e044b6d2eebca121de)
+    git clone git@github.com:istvan-derda/TimeVQVAE_tsgb-patch.git Time_VQVAE
+    $(cd Time_VQVAE && git checkout 275abba9863209a8ee30971ae883da4ebd619f92)
 
 get-gen:
     rsync -avz --progress scuni:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .
