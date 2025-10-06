@@ -1,3 +1,4 @@
+import functools
 import os
 import argparse
 from datetime import datetime
@@ -36,7 +37,7 @@ def persist_gen_data(data):
     os.makedirs(dir_path, exist_ok=True)
     np.save(file_path, data)
 
-
+@functools.lru_cache(maxsize=None)
 def get_dataset_name():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset_no')
@@ -50,5 +51,10 @@ def get_dataset_name():
         '6': 'D6_energy_long',
         '7': 'D7_eeg'
     }
+
+    # remove --dataset_no and value from argv so later argument parsers don't choke on it
+    idx = sys.argv.index('--dataset_no')
+    sys.argv.pop(idx)
+    sys.argv.pop(idx)
 
     return dataset_names[args.dataset_no]
