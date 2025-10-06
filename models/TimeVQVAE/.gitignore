@@ -1,1 +1,4 @@
-TimeVQVAE
+Time_VQVAE
+venv
+wandb
+saved_models
