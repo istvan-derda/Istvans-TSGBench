@@ -104,9 +104,10 @@ def main():
         strict=False
         )
 
-    maskgit = exp_stage2.maskgit
-
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    maskgit = exp_stage2.maskgit.to(device)
+
     _x_new_l, _x_new_h, x_new = unconditional_sample(
         maskgit=maskgit, 
         n_samples=N_SAMPLES, 
