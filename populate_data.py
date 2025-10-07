@@ -87,6 +87,7 @@ def populate_D7_eeg():
     temp_path = unzip(temp_path, data_path_in_zip='EEG Eye State.arff')
     temp_path = arff2csv(temp_path)
     temp_path = remove_csv_column(temp_path, 'eyeDetection')
+    temp_path = mad_outlier_correction(temp_path)
     raw_data_path = persist_raw(temp_path, 'D7_eeg.csv')
 
     preprocess_data(
@@ -214,6 +215,24 @@ def sliding_window_view(data, window_size, step=1):
     # Create the sliding window view
     strided_array = np.lib.stride_tricks.as_strided(data, shape=new_shape, strides=new_strides)
     return strided_array
+
+
+def mad_outlier_correction(csv_path):
+    df = pd.read_csv(csv_path)
+    median = df.median()
+
+    mad = (df - median).abs().median()
+
+    modified_z_score = 0.6745 * (df - median) / mad
+
+    threshold = 3.5
+    df_outliers_nan = df.mask(modified_z_score.abs() > threshold, np.nan)
+
+    df_nan_interpolated =  df_outliers_nan.interpolate(limit_direction='both')
+
+    out_path = csv_path
+    df_nan_interpolated.to_csv(out_path, index=False)
+    return out_path
 
 
 if __name__ == "__main__":
