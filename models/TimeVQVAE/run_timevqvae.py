@@ -115,8 +115,8 @@ def main():
         batch_size=config['evaluation']['batch_size']
     )
 
-    print(x_new.shape)
     x_new = np.transpose(x_new, (0, 2, 1))
+    print(x_new.shape)
     
     persist_gen_data(x_new)
 

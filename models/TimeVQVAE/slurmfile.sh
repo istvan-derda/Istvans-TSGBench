@@ -3,7 +3,7 @@
 #SBATCH --time=2-00:00:00
 #SBATCH --array=2-7
 #SBATCH --partition=clara
-#SBATCH --gpus=rtx2080ti
+#SBATCH --gpus=v100
 #SBATCH --mem=8G
 #SBATCH -o jobfiles/%x_%A_%a.out
 #SBATCH -e jobfiles/%x_%A_%a.err
