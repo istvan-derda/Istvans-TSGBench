@@ -31,7 +31,6 @@ log_progress "Setting up environment"
 module purge
 module load CUDA/11.8.0
 module load Python/3.10.8-GCCcore-12.2.0
-# correct module? module load PyTorch/1.12.1-foss-2021b-CUDA-11.5.2 
 VENV_DIR=/tmp/slurm_job_${SLURM_JOB_ID}_venv
 python -m venv --system-site-packages $VENV_DIR
 source $VENV_DIR/bin/activate

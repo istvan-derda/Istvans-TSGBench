@@ -52,9 +52,26 @@ def get_dataset_name():
         '7': 'D7_eeg'
     }
 
-    # remove --dataset_no and value from argv so later argument parsers don't choke on it
-    idx = sys.argv.index('--dataset_no')
-    sys.argv.pop(idx)
-    sys.argv.pop(idx)
+    if args.dataset_no is None:
+        raise ValueError("--dataset_no must be provided (e.g., '--dataset_no 2' or '--dataset_no=2')")
+
+    # Remove both '--dataset_no' and its value safely
+    new_argv = []
+    skip_next = False
+    for i, arg in enumerate(sys.argv):
+        if skip_next:
+            skip_next = False
+            continue
+
+        if arg.startswith("--dataset_no"):
+            # Handle both '--dataset_no 2' and '--dataset_no=2'
+            if arg == "--dataset_no" and i + 1 < len(sys.argv):
+                skip_next = True
+            continue  # skip this arg (and possibly its value)
+        else:
+            new_argv.append(arg)
+
+    sys.argv[:] = new_argv  # modify in place so other parsers see clean args
+
 
     return dataset_names[args.dataset_no]
