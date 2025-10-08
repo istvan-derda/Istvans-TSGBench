@@ -1,4 +1,4 @@
-from src.evaluation import evaluate_data
+from evaluation_utils.evaluation import evaluate_data
 import argparse
 from pyprojroot import here
 import numpy as np

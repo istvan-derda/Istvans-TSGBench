@@ -168,9 +168,6 @@ def preprocess_data(ori_data_path, dataset_name, seq_length, valid_ratio = 0.1):
     print(f"Preprocessing {dataset_name}")
 
     df = pd.read_csv(ori_data_path)
-
-    # interpolate missing values
-    df = df.interpolate(axis=0) # tsgbench uses other axis oO
    
     # scale data to feature range 0..1
     df = (df - df.min()) / (df.max() - df.min())
