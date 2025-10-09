@@ -42,7 +42,7 @@ def _plot_timeseries(timeseries, ax=None, channel_nos=None, labels=None, autosca
             ax.set_ylim([0, 1])
 
 
-def plot_dataset(dataset_path, samplesize=3, indexes=None, labels=None, autoscale=False):
+def plot_dataset(dataset_path, samplesize=3, indexes=None, labels=None, autoscale=False, title=None):
     dataset, file_name = _read_dataset(dataset_path)
     fig, axs = plt.subplots(samplesize, 1)
     for i in range(samplesize):
@@ -54,4 +54,7 @@ def plot_dataset(dataset_path, samplesize=3, indexes=None, labels=None, autoscal
     if samplesize > 1:
         handles, labels = axs[0].get_legend_handles_labels()
         fig.legend(handles, labels)
-    fig.suptitle(file_name)
+    if title:
+        fig.suptitle(title)
+    else:
+        fig.suptitle(file_name)
