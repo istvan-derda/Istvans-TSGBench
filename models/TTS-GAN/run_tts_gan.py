@@ -43,10 +43,13 @@ def main():
 
 
 def generate(model, sample_count):
+    synthetic_data = []
     latent_dim = 100
-    random_noise = torch.tensor(np.random.normal(0, 1, (sample_count, latent_dim))).to(device, dtype=torch.float32)
-    synthetic_data = model(random_noise).detach().numpy()
-    return synthetic_data
+    for _ in range(sample_count):
+        random_noise = torch.tensor(np.random.normal(0, 1, (1, latent_dim))).to(device, dtype=torch.float32)
+        sample = model(random_noise).to('cpu').detach().numpy()
+        synthetic_data.append(sample)
+    return np.array(synthetic_data)
 
 if __name__ == '__main__':
     main()
