@@ -6,6 +6,7 @@ import os
 import time
 import sys
 import re
+import argparse
 
 import pandas as pd
 import numpy as np
@@ -19,15 +20,25 @@ urls = {
     'D2_D3': 'https://github.com/jsyoon0823/TimeGAN/raw/refs/heads/master/data/stock_data.csv',
     'D4': 'https://github.com/laiguokun/multivariate-time-series-data/raw/refs/heads/master/exchange_rate/exchange_rate.txt.gz',
     'D5_D6': 'https://archive.ics.uci.edu/static/public/374/appliances+energy+prediction.zip',
-    'D7': 'https://archive.ics.uci.edu/static/public/264/eeg+eye+state.zip'
+    'D7': 'https://archive.ics.uci.edu/static/public/264/eeg+eye+state.zip',
+    'D10': 'https://raw.githubusercontent.com/DMIRLAB-Group/SASA/f26ce4a066582811fa73a2956f59e510a82c4efb/datasets/Boiler/Boiler_%2301.csv'
 }
 
-
 def main():
-    populate_D2_D3_stock()
-    populate_D4_exchange()
-    populate_D5_D6_energy()
-    populate_D7_eeg()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--datasets', nargs="*", type=int, default=[2,3,4,5,6,7,10])
+    args = parser.parse_args()
+
+    if 2 in args.datasets or 3 in args.datasets:
+        populate_D2_D3_stock()
+    if 4 in args.datasets:
+        populate_D4_exchange()
+    if 5 in args.datasets or 6 in args.datasets:
+        populate_D5_D6_energy()
+    if 7 in args.datasets:
+        populate_D7_eeg()
+    if 10 in args.datasets:
+        populate_D10_boiler()
 
 
 def populate_D2_D3_stock():
@@ -96,6 +107,20 @@ def populate_D7_eeg():
         seq_length=128
     )
    
+
+def populate_D10_boiler():
+    print_populate_start('D10_boiler')
+    temp_path = download_dataset(url=urls['D10'])
+    temp_path = remove_csv_column(temp_path, 'TIME')
+    temp_path = remove_csv_column(temp_path, 'boiler_no')
+    raw_data_path = persist_raw(temp_path, 'D10_boiler.csv')
+
+    preprocess_data(
+        ori_data_path=raw_data_path,
+        dataset_name='D10_boiler',
+        seq_length=192
+    )
+
 
 def print_populate_start(dataset_name):
     print("""
