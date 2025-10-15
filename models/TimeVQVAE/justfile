@@ -4,4 +4,4 @@ init:
     $(cd Time_VQVAE && git checkout 275abba9863209a8ee30971ae883da4ebd619f92)
 
 get-gen:
-    rsync -avz --progress scuni:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .
+    rsync -avz --progress login01.sc.uni-leipzig.de:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .
