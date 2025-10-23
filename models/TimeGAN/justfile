@@ -1,2 +1,2 @@
 get-gen:
-    rsync -avz --progress login01.sc.uni-leipzig.de:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .
+    rsync -avz --progress wi34sasa@login01.sc.uni-leipzig.de:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .

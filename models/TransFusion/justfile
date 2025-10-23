@@ -14,4 +14,4 @@ init:
     $(cd TransFusion && git checkout f13a83ff5532aca8e86ec6186b9f24bd1ab70630)
 
 get-gen:
-    rsync -avz --progress login01.sc.uni-leipzig.de:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .
+    rsync -avz --progress wi34sasa@login01.sc.uni-leipzig.de:"Istvans-TSGBench/models/$(basename "$PWD")/gen" .
