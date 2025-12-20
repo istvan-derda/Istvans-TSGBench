@@ -20,6 +20,8 @@ RUN pip install --no-cache-dir dtaidistance==2.3.12
 RUN pip install --no-cache-dir plotly==5.18
 RUN pip install --no-cache-dir jinja2==3.1
 RUN pip install --no-cache-dir nbformat==5.8
+RUN pip install --no-cache-dir scikit-posthocs
+RUN pip install --no-cache-dir kaleido
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends vim && \
