@@ -64,23 +64,11 @@ class HistoLoss(Loss):
 
     def compute(self, x_fake):
         loss = list()
-
-        def relu(x):
-            return x * (x >= 0.).float()
-
         for i in range(x_fake.shape[2]):
-            tmp_loss = list()
-            # Exclude the initial point
             for t in range(x_fake.shape[1]):
-                loc = self.locs[i][t].view(1, -1).to(x_fake.device)
-                x_ti = x_fake[:, t, i].contiguous(
-                ).view(-1, 1).repeat(1, loc.shape[1])
-                dist = torch.abs(x_ti - loc)
-                counter = (relu(self.deltas[i][t].to(
-                    x_fake.device) / 2. - dist) > 0.).float()
-                density = counter.mean(0) / self.deltas[i][t].to(x_fake.device)
-                abs_metric = torch.abs(
-                    density - self.densities[i][t].to(x_fake.device))
+                x_ti = x_fake[:, t, i].reshape(-1, 1)
+                density_fake, _ = histogram_torch(x_ti, n_bins=len(self.densities[i][t]), density=True)
+                abs_metric = torch.abs(density_fake - self.densities[i][t].to(x_fake.device))
                 loss.append(torch.mean(abs_metric, 0))
         loss_componentwise = torch.stack(loss)
         return loss_componentwise
