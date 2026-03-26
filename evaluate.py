@@ -24,8 +24,7 @@ def main():
             ori_data,
             gen_data,
             model_name=args.model,
-            dataset_name=gen_data_name,
-            method_list=['MDD']
+            dataset_name=gen_data_name
         )
 
 
