@@ -60,6 +60,7 @@ Reference to the original paper by Yihao Ang et al.:
   pages        = {305--318},
   year         = {2023}
 }
+```
 
 ## Setup Development Environment
 
