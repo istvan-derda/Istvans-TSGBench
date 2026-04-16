@@ -28,29 +28,43 @@ This approach is recommended on systems where you cannot install Docker or don't
 
 ## Use TSGBench
 
-**Get the Benchmark Datasets**
+Steps 1 and three assume the tsg-bench conda environment to be activated. In the project root run:
+
+- `conda env create -f environment.yml`
+- `conda activate tsgbench`
+
+**1. Get the Benchmark Datasets**
 
 `python populate_data.py`
 
-**Run a Benchmark**
+**2. Generate Synthetic Time Series**
 
-Follow the instructions in the subdirectory models/[model you want to benchmark]
+Instructions for running on sc.uni-leipzig.de:
 
-**Evaluate a Generated Time Series**
+1. enter `models/<method name>`
+1. run `just init` to pull the methods implementation
+1. run `sbatch sc.uni-leipzig.de.slurm.bash`
 
-`python evaluate.py <model name>`
+The scripts will take care of training and inference and output generated time series to `models/<method name>/gen`. This can take a while (TM). (up to 24 hours for some method-dataset combinations on sc.uni-leipzig.de)
 
-The script assumes that a directory `models/<model name>/gen` exists and contains the generated time series data. For details on the expected folder structure and file names see the code.
+For running the training and inference in any other environment, create a wrapper script that sets up the software environment for a given method and runs it with all datasets. Use the provided slurm file as reference. Feel free to submit a pull request to share the working wrapper script.
+
+**3. Evaluate a Generated Time Series**
+
+`python evaluate.py <method name>`
+
+The script assumes that a directory `benchmarked_methods/<method name>/gen` exists and contains the generated time series data. For details on the expected folder structure and file names see the code.
 
 ## Evaluated models:
 
 
-| Architecture         | Repository                                    | Task                         |
+| Architecture         | Original Repository                           | Task                         |
 |----------------------|-----------------------------------------------|------------------------------|
 | TimeGAN              | https://github.com/jsyoon0823/TimeGAN         | Multivariate TSG             |
 | TTS-GAN              | https://github.com/imics-lab/tts-gan          | Multivariate TSG             |
 | Time-Transformer AAE | https://github.com/Lysarthas/Time-Transformer | Multivariate TSG             |
 | TransFusion          | https://github.com/fahim-sikder/TransFusion   | Multivariate TSG             |
+| TimeVQVAE            | https://github.com/ML4ITS/TimeVQVAE           | Multivariate TSG             |
 
 
 ## References
@@ -58,7 +72,6 @@ The script assumes that a directory `models/<model name>/gen` exists and contain
 Reference to the original paper by Yihao Ang et al.:
 
 ```bibtex
-# TSGBench
 @article{ang2023tsgbench,
   title        = {TSGBench: Time Series Generation Benchmark},
   author       = {Ang, Yihao and Huang, Qiang and Bao, Yifan and Tung, Anthony KH and Huang, Zhiyong},
