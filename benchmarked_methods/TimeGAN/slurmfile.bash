@@ -12,8 +12,14 @@ DATASET_NO=$SLURM_ARRAY_TASK_ID
 curl \
 	-d "Started TimeGAN on Dataset D$DATASET_NO (Job ID: $SLURM_JOB_ID)" ntfy.sh/istvanshpcunileipzig
 
+module purge
+module load Anaconda3
+
 eval "$(conda shell.bash hook)"
+
+conda env update --prune
 conda activate time-gan
+
 python run_time_gan.py --dataset_no $DATASET_NO
 
 curl \
